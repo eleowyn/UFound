@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-const button = ({
+const Button = ({
   bgColor = '#1C272F',
   textColor = '#FFFFFF',
   text = 'Button Text',
@@ -18,7 +18,7 @@ const button = ({
   );
 };
 
-export default button;
+export default Button;
 
 const styles = StyleSheet.create({
   container: alignItems => ({

@@ -1,4 +1,5 @@
 import textInput from './atoms/textInput';
-import button from './atoms/button';
+import Button from './atoms/button';
+import Gap from './atoms/Gap';
 
-export {textInput, button};
+export {textInput, Button, Gap};
