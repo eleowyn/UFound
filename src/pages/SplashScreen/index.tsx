@@ -1,13 +1,13 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import Pic from '../../assets/SplashScreen.svg';
-import { Gap } from '../../components';
+import {LogoUFound} from '../../components';
 
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
-      <Pic/>
-      <Text style={styles.text}>U-Found</Text>
+      <LogoUFound />
+      <Pic />
     </View>
   );
 };
