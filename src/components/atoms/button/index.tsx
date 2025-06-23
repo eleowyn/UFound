@@ -5,8 +5,8 @@ const Button = ({
   bgColor = '#1C272F',
   textColor = '#FFFFFF',
   text = 'Button Text',
-  width = 313,
-  height = 40,
+  width = 347,
+  height = 60,
   alignItems = 'center',
 }) => {
   return (
@@ -34,5 +34,6 @@ const styles = StyleSheet.create({
   }),
   text: textColor => ({
     color: textColor,
+    fontFamily: 'Poppins-SemiBold'
   }),
 });
