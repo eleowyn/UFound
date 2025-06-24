@@ -16,7 +16,6 @@ const Dashboard = () => {
       <ScrollView
         style={styles.container}
         contentContainerStyle={{paddingBottom: 100}}>
-        {/* Header */}
         <View style={styles.header}>
           <View>
             <Text style={styles.greeting}>Hey, Elshera</Text>
@@ -29,7 +28,6 @@ const Dashboard = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Tombol Browse dan Add */}
         <View style={styles.buttonRow}>
           <TouchableOpacity style={[styles.circleButton, styles.browseBg]}>
             <BrowseIcon width={40} height={40} />
@@ -39,13 +37,11 @@ const Dashboard = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Label Tombol */}
         <View style={styles.buttonLabelRow}>
           <Text style={styles.label}>Browse Items</Text>
           <Text style={styles.label}>Add Items</Text>
         </View>
 
-        {/* Kartu */}
         <View style={styles.cardContainer}>
           <View style={styles.cardGrid}>
             <Card title="Charger" location="GKC-103" />
@@ -58,7 +54,6 @@ const Dashboard = () => {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation */}
       <BottomNav />
     </View>
   );
