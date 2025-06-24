@@ -1,7 +1,19 @@
-import activityIcon from './activityIcon.svg';
-import addIcon from './addIcon.svg';
-import homeIcon from './homeIcon.svg';
-import searchIcon from './searchIcon.svg';
-import moreIcon from './moreIcon.svg';
+import HomeIcon from './homeIcon.svg';
+import SearchIcon from './searchIcon.svg';
+import AddIcon from './addIcon.svg';
+import ActivityIcon from './activityIcon.svg';
+import MoreIcon from './moreIcon.svg';
+import AddItemsIcon from './addItemsIcon.svg';
+import BrowseIcon from './BrowseIcon.svg';
+import NotificationIcon from './BellIcon.svg';
 
-export { activityIcon, addIcon, homeIcon, searchIcon, moreIcon };
+export {
+  HomeIcon,
+  SearchIcon,
+  AddIcon,
+  ActivityIcon,
+  MoreIcon,
+  AddItemsIcon,
+  BrowseIcon,
+  NotificationIcon,
+};
