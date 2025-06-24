@@ -6,6 +6,7 @@ import MoreIcon from './moreIcon.svg';
 import AddItemsIcon from './addItemsIcon.svg';
 import BrowseIcon from './BrowseIcon.svg';
 import NotificationIcon from './BellIcon.svg';
+import ArrowLeftIcon from './backIcon.svg';
 
 export {
   HomeIcon,
@@ -16,4 +17,5 @@ export {
   AddItemsIcon,
   BrowseIcon,
   NotificationIcon,
+  ArrowLeftIcon,
 };
