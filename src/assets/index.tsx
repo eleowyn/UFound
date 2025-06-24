@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import activityIcon from './activityIcon.svg';
-import addIcon from './addIcon.svg';
-import homeIcon from './homeIcon.svg';
-import searchIcon from './searchIcon.svg';
-import moreIcon from './moreIcon.svg';
-import Backbutton from './backbutton.svg';
-
-export {activityIcon, addIcon, homeIcon, searchIcon, moreIcon, Backbutton};
-=======
 import HomeIcon from './homeIcon.svg';
 import SearchIcon from './searchIcon.svg';
 import AddIcon from './addIcon.svg';
@@ -27,4 +17,3 @@ export {
   BrowseIcon,
   NotificationIcon,
 };
->>>>>>> 6252568898df21add2a78a5631e5d92849d40698
