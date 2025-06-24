@@ -6,7 +6,7 @@ import Logosignup from '../../assets/signup_pic';
 import TextInput from '../../components/atoms/textInput';
 import Checkbox from '../../components/atoms/Checkbox';
 
-const Login = () => {
+const SignUp = () => {
   return (
     <View style={styles.pageContainer}>
       <Header title="Let's Get Started!" subTitle="Fill the form to continue" />
@@ -34,7 +34,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
 
 const styles = StyleSheet.create({
   pageContainer: {
