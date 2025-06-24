@@ -1,11 +1,16 @@
 import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import Login from './src/pages/Login/index';
 import SignUp from './src/pages/SignUp';
+import {ItemDetails} from './src/pages';
 
 const App = () => {
   return (
-    // <SplashScreen/>
-    <SignUp />
+    <View>
+      {/* <SplashScreen />
+      <SignUp /> */}
+      <ItemDetails />
+    </View>
   );
 };
 

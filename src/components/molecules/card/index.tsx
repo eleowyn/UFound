@@ -1,15 +1,13 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 import Foundlabel from '../../atoms/statuslabel/foundlabel';
+import NoPhoto from '../../../assets/NoPhoto.jpg';
 
 const Card = ({title = 'Lost Item', location = 'Unklab'}) => {
   return (
     <View style={styles.container}>
       <View>
-        <Image
-          source={require('../../../assets/NoPhoto.jpg')}
-          style={styles.pic}
-        />
+        <Image source={NoPhoto} style={styles.pic} />
       </View>
       <View style={styles.description}>
         <View>
@@ -19,7 +17,7 @@ const Card = ({title = 'Lost Item', location = 'Unklab'}) => {
             <Text style={styles.subtitleText}>{location}</Text>
           </View>
         </View>
-        <Foundlabel />
+        <Foundlabel width={47} height={14} fontSize={7} />
       </View>
     </View>
   );
