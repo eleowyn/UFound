@@ -1,11 +1,11 @@
 import React from 'react';
-import SplashScreen from './src/pages/SplashScreen';
-import Login from './src/pages/Login';
+import Login from './src/pages/Login/index';
+import SignUp from './src/pages/SignUp';
 
 const App = () => {
   return (
     // <SplashScreen/>
-    <Login/>
+    <SignUp />
   );
 };
 
