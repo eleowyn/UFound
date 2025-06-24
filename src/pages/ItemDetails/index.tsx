@@ -2,6 +2,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {BackIcon} from '../../assets';
 import {Bigcard} from '../../components';
+import BottomTabs from '../../components/molecules/Tabs';
 
 const ItemDetails = () => {
   return (
@@ -15,6 +16,7 @@ const ItemDetails = () => {
         <Text style={styles.text}>Items Details</Text>
       </View>
       <Bigcard />
+      <BottomTabs />
     </View>
   );
 };

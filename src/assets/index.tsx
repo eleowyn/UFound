@@ -8,6 +8,8 @@ import BrowseIcon from './BrowseIcon.svg';
 import NotificationIcon from './BellIcon.svg';
 import Location from './Location.svg';
 import ArrowLeftIcon from './backIcon.svg';
+import BackIcon from './backIcon.svg';
+import Ellips from './EllipsIcon.svg';
 
 export {
   HomeIcon,
