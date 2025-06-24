@@ -8,6 +8,7 @@ import Search from './src/pages/Search';
 import SplashScreen from './src/pages/SplashScreen';
 import Activity from './src/pages/Activity';
 import {ItemDetails} from './src/pages';
+import Account from './src/pages/Account';
 
 const App = () => {
   return (
@@ -15,10 +16,11 @@ const App = () => {
     // <Login/>
     // <SignUp />
     // <AddItems />
-    <ItemDetails />
+    // <ItemDetails />
     // <Dashboard />
     // <Search />
     // <Activity/>
+    <Account/>
   );
 };
 
