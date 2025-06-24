@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {Backbutton} from '../../assets';
+import {BackIcon} from '../../assets';
 import {Bigcard} from '../../components';
 
 const ItemDetails = () => {
@@ -9,7 +9,7 @@ const ItemDetails = () => {
       <View style={styles.header}>
         <View>
           <TouchableOpacity>
-            <Backbutton style={styles.button} />
+            <BackIcon style={styles.button} />
           </TouchableOpacity>
         </View>
         <Text style={styles.text}>Items Details</Text>
