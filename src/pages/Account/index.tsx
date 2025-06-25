@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -23,7 +23,16 @@ const Account = () => {
 
         <View style={styles.profileSection}>
           <View style={styles.profileRow}>
-            <View style={styles.profileCircle} />
+            <TouchableOpacity onPress={onSelectImage}>
+              {photoUri ? (
+                <Image
+                  source={{uri: photoUri}}
+                  style={styles.profileCircle}
+                />
+              ) : (
+                <View style={styles.profileCircle} />
+              )}
+            </TouchableOpacity>
             <View style={styles.textColumn}>
               <Text style={styles.profileName}>ellantif</Text>
               <Text style={styles.profileEmail}>

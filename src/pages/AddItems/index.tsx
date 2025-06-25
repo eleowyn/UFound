@@ -59,38 +59,6 @@ const AddItems = () => {
     );
   };
 
-  const openCamera = () => {
-    const options = {
-      mediaType: 'photo' as const,
-      quality: 0.8,
-    };
-
-    launchCamera(options, response => {
-      if (response.assets && response.assets.length > 0) {
-        setSelectedImage(response.assets[0]);
-        Alert.alert('Success', 'Photo captured successfully!');
-      } else if (response.errorMessage) {
-        Alert.alert('Error', response.errorMessage);
-      }
-    });
-  };
-
-  const openGallery = () => {
-    const options = {
-      mediaType: 'photo' as const,
-      quality: 0.8,
-    };
-
-    launchImageLibrary(options, response => {
-      if (response.assets && response.assets.length > 0) {
-        setSelectedImage(response.assets[0]);
-        Alert.alert('Success', 'Photo selected successfully!');
-      } else if (response.errorMessage) {
-        Alert.alert('Error', response.errorMessage);
-      }
-    });
-  };
-
   const handlePost = () => {
     if (!itemName || !location || !contact || !description) {
       Alert.alert('Error', 'Please fill all required fields');
