@@ -4,7 +4,6 @@ import {
   Activity,
   AddItems,
   Dashboard,
-  Home,
   ItemDetails,
   Login,
   Search,
@@ -22,6 +21,11 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+          name="ItemDetails"
+          component={ItemDetails}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
@@ -47,16 +51,7 @@ const App = () => {
           component={Dashboard}
           options={{headerShown: false}}
         />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="ItemDetails"
-          component={ItemDetails}
-          options={{headerShown: false}}
-        />
+
         <Stack.Screen
           name="Login"
           component={Login}
@@ -75,6 +70,7 @@ const App = () => {
       </Stack.Navigator>
       <FlashMessage position="top" />
     </NavigationContainer>
+    // <SplashScreen />
   );
 };
 

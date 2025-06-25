@@ -2,7 +2,6 @@ import Account from './Account';
 import Activity from './Activity';
 import AddItems from './AddItems';
 import Dashboard from './Dashboard';
-import Home from './Home';
 import ItemDetails from './ItemDetails';
 import Login from './Login';
 import Search from './Search';
@@ -14,7 +13,6 @@ export {
   Activity,
   AddItems,
   Dashboard,
-  Home,
   ItemDetails,
   Login,
   Search,
