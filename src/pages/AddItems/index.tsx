@@ -14,37 +14,68 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../components/molecules/header';
 import {Button, Gap} from '../../components';
 import BottomTabs from '../../components/molecules/Tabs';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 
-const AddItems = navigation => {
+const AddItems = ({navigation}) => {
   const [selectedPostType, setSelectedPostType] = useState('Found');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  // Removed unused showTimePicker state
   const [itemName, setItemName] = useState('');
   const [location, setLocation] = useState('');
   const [contact, setContact] = useState('');
   const [description, setDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const formatDateTime = () => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    };
-    return date.toLocaleDateString('en-US', options);
-  };
-
-  const onDateChange = (event: any, selectedDate?: Date) => {
+  const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
     }
   };
 
-  // Removed onTimeChange since time picker is removed
+  const openCamera = () => {
+    launchCamera({mediaType: 'photo'}, response => {
+      if (response.didCancel) {
+        showMessage({
+          message: 'Image selection canceled',
+          type: 'info',
+        });
+      } else if (response.errorCode) {
+        showMessage({
+          message: 'Camera error: ' + response.errorMessage,
+          type: 'danger',
+        });
+      } else if (response.assets?.length) {
+        setSelectedImage(response.assets[0]);
+        showMessage({
+          message: 'Image selected from camera',
+          type: 'success',
+        });
+      }
+    });
+  };
+
+  const openGallery = () => {
+    launchImageLibrary({mediaType: 'photo'}, response => {
+      if (response.didCancel) {
+        showMessage({
+          message: 'Image selection canceled',
+          type: 'info',
+        });
+      } else if (response.errorCode) {
+        showMessage({
+          message: 'Gallery error: ' + response.errorMessage,
+          type: 'danger',
+        });
+      } else if (response.assets?.length) {
+        setSelectedImage(response.assets[0]);
+        showMessage({
+          message: 'Image selected from gallery',
+          type: 'success',
+        });
+      }
+    });
+  };
 
   const selectImage = () => {
     Alert.alert(
@@ -61,10 +92,17 @@ const AddItems = navigation => {
 
   const handlePost = () => {
     if (!itemName || !location || !contact || !description) {
-      Alert.alert('Error', 'Please fill all required fields');
+      showMessage({
+        message: 'Please fill all required fields',
+        type: 'danger',
+      });
       return;
     }
-    Alert.alert('Success', 'Item posted successfully!');
+
+    showMessage({
+      message: 'Item posted successfully!',
+      type: 'success',
+    });
   };
 
   return (
@@ -80,7 +118,6 @@ const AddItems = navigation => {
         />
 
         <View style={styles.formContainer}>
-          {/* Info Message */}
           <View style={styles.infoContainer}>
             <View style={styles.infoIconGreen}>
               <Text style={styles.plusIcon}>+</Text>
@@ -92,7 +129,6 @@ const AddItems = navigation => {
 
           <Gap height={24} />
 
-          {/* Date & Time */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Date & Time</Text>
             <TouchableOpacity
@@ -101,7 +137,7 @@ const AddItems = navigation => {
                 setShowDatePicker(true);
               }}>
               <Text style={styles.dateTimeText}>
-                {date.toLocaleDateString('en-US') || 'Select date'}
+                {date.toLocaleDateString('en-US')}
               </Text>
             </TouchableOpacity>
             {showDatePicker && (
@@ -116,7 +152,6 @@ const AddItems = navigation => {
 
           <Gap height={16} />
 
-          {/* Post Type */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Post Type</Text>
             <View style={styles.postTypeContainer}>
@@ -137,13 +172,13 @@ const AddItems = navigation => {
               <TouchableOpacity
                 style={[
                   styles.postTypeButton,
-                  selectedPostType === 'Lost' && styles.lostButtonGray,
+                  selectedPostType === 'Lost' && styles.lostButton,
                 ]}
                 onPress={() => setSelectedPostType('Lost')}>
                 <Text
                   style={[
                     styles.postTypeText,
-                    selectedPostType === 'Lost' && styles.lostTextGray,
+                    selectedPostType === 'Lost' && styles.lostText,
                   ]}>
                   Lost
                 </Text>
@@ -153,7 +188,6 @@ const AddItems = navigation => {
 
           <Gap height={16} />
 
-          {/* Item Name and Location Row */}
           <View style={styles.rowContainer}>
             <View style={styles.halfWidthContainer}>
               <View style={styles.inputWrapper}>
@@ -183,7 +217,6 @@ const AddItems = navigation => {
 
           <Gap height={16} />
 
-          {/* Add Picture */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Add Picture</Text>
             <TouchableOpacity
@@ -195,7 +228,7 @@ const AddItems = navigation => {
                   style={styles.selectedImage}
                 />
               ) : (
-                <View style={styles.pictureUploadGray}>
+                <View style={styles.pictureUpload}>
                   <View style={styles.cameraIconContainer}>
                     <Text style={styles.cameraIcon}>📷</Text>
                   </View>
@@ -206,7 +239,6 @@ const AddItems = navigation => {
 
           <Gap height={16} />
 
-          {/* Contact Information */}
           <View style={styles.inputWrapper}>
             <Text style={styles.inputLabel}>Your Information/Contact</Text>
             <TextInput
@@ -215,14 +247,12 @@ const AddItems = navigation => {
               style={styles.textInput}
               value={contact}
               onChangeText={setContact}
-              // Added keyboardType for contact input
               keyboardType="phone-pad"
             />
           </View>
 
           <Gap height={16} />
 
-          {/* Description */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Description/Item Information</Text>
             <View style={styles.descriptionContainer}>
@@ -252,11 +282,13 @@ const AddItems = navigation => {
       </ScrollView>
 
       <BottomTabs activeIndex={2} />
+      <FlashMessage position="top" />
     </View>
   );
 };
 
 export default AddItems;
+
 
 const styles = StyleSheet.create({
   pageContainer: {

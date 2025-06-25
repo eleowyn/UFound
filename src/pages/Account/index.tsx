@@ -5,16 +5,75 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  Image,
+  Alert,
 } from 'react-native';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { showMessage } from 'react-native-flash-message';
 import BottomNav from '../../components/molecules/BottomNav';
-import {ArrowLeftIcon} from '../../assets/index';
+import { ArrowLeftIcon } from '../../assets/index';
 
-const Account = ({navigation}) => {
+const Account = ({ navigation }) => {
+  const [photoUri, setPhotoUri] = useState(null);
+
+  const onSelectImage = () => {
+    Alert.alert(
+      'Upload Photo',
+      'Choose a method',
+      [
+        {
+          text: 'Camera',
+          onPress: () => {
+            launchCamera({ mediaType: 'photo' }, response => {
+              if (response.didCancel) {
+                showMessage({
+                  message: 'Image selection canceled',
+                  type: 'warning',
+                });
+                return;
+              }
+              if (response.assets && response.assets.length > 0) {
+                setPhotoUri(response.assets[0].uri);
+                showMessage({
+                  message: 'Photo selected from camera!',
+                  type: 'success',
+                });
+              }
+            });
+          },
+        },
+        {
+          text: 'Gallery',
+          onPress: () => {
+            launchImageLibrary({ mediaType: 'photo' }, response => {
+              if (response.didCancel) {
+                showMessage({
+                  message: 'Image selection canceled',
+                  type: 'warning',
+                });
+                return;
+              }
+              if (response.assets && response.assets.length > 0) {
+                setPhotoUri(response.assets[0].uri);
+                showMessage({
+                  message: 'Photo selected from gallery!',
+                  type: 'success',
+                });
+              }
+            });
+          },
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <View style={styles.page}>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={{paddingBottom: 100}}>
+        contentContainerStyle={{ paddingBottom: 100 }}>
         <TouchableOpacity
           style={styles.backIcon}
           onPress={() => navigation.goBack()}>
@@ -27,10 +86,7 @@ const Account = ({navigation}) => {
           <View style={styles.profileRow}>
             <TouchableOpacity onPress={onSelectImage}>
               {photoUri ? (
-                <Image
-                  source={{uri: photoUri}}
-                  style={styles.profileCircle}
-                />
+                <Image source={{ uri: photoUri }} style={styles.profileCircle} />
               ) : (
                 <View style={styles.profileCircle} />
               )}
