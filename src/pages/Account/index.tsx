@@ -9,13 +9,15 @@ import {
 import BottomNav from '../../components/molecules/BottomNav';
 import {ArrowLeftIcon} from '../../assets/index';
 
-const Account = () => {
+const Account = ({navigation}) => {
   return (
     <View style={styles.page}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={{paddingBottom: 100}}>
-        <TouchableOpacity style={styles.backIcon}>
+        <TouchableOpacity
+          style={styles.backIcon}
+          onPress={() => navigation.goBack()}>
           <ArrowLeftIcon width={24} height={24} />
         </TouchableOpacity>
 

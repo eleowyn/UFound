@@ -15,7 +15,7 @@ import Header from '../../components/molecules/header';
 import {Button, Gap} from '../../components';
 import BottomTabs from '../../components/molecules/Tabs';
 
-const AddItems = () => {
+const AddItems = navigation => {
   const [selectedPostType, setSelectedPostType] = useState('Found');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -101,127 +101,131 @@ const AddItems = () => {
 
   return (
     <View style={styles.pageContainer}>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}>
-        
         <Header
           title="Add Items"
           subTitle="Find your items and help people find it too!"
           showBackButton={true}
         />
-        
+
         <View style={styles.formContainer}>
           {/* Info Message */}
-        <View style={styles.infoContainer}>
-          <View style={styles.infoIconGreen}>
-            <Text style={styles.plusIcon}>+</Text>
-          </View>
-          <Text style={styles.infoText}>
-            Hey elshara, fill this form to add founded or lost items!
-          </Text>
-        </View>
-
-        <Gap height={24} />
-
-        {/* Date & Time */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Date & Time</Text>
-          <TouchableOpacity
-            style={styles.dateTimeInput}
-            onPress={() => {
-              setShowDatePicker(true);
-            }}>
-            <Text style={styles.dateTimeText}>
-              {date.toLocaleDateString('en-US') || 'Select date'}
+          <View style={styles.infoContainer}>
+            <View style={styles.infoIconGreen}>
+              <Text style={styles.plusIcon}>+</Text>
+            </View>
+            <Text style={styles.infoText}>
+              Hey elshara, fill this form to add founded or lost items!
             </Text>
-          </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={onDateChange}
-            />
-          )}
-        </View>
+          </View>
 
-        <Gap height={16} />
+          <Gap height={24} />
 
-        {/* Post Type */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Post Type</Text>
-          <View style={styles.postTypeContainer}>
+          {/* Date & Time */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Date & Time</Text>
             <TouchableOpacity
-              style={[
-                styles.postTypeButton,
-                selectedPostType === 'Found' && styles.foundButton,
-              ]}
-              onPress={() => setSelectedPostType('Found')}>
-              <Text
-                style={[
-                  styles.postTypeText,
-                  selectedPostType === 'Found' && styles.foundText,
-                ]}>
-                Found
+              style={styles.dateTimeInput}
+              onPress={() => {
+                setShowDatePicker(true);
+              }}>
+              <Text style={styles.dateTimeText}>
+                {date.toLocaleDateString('en-US') || 'Select date'}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.postTypeButton,
-                selectedPostType === 'Lost' && styles.lostButtonGray,
-              ]}
-              onPress={() => setSelectedPostType('Lost')}>
-              <Text
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={onDateChange}
+              />
+            )}
+          </View>
+
+          <Gap height={16} />
+
+          {/* Post Type */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Post Type</Text>
+            <View style={styles.postTypeContainer}>
+              <TouchableOpacity
                 style={[
-                  styles.postTypeText,
-                  selectedPostType === 'Lost' && styles.lostTextGray,
-                ]}>
-                Lost
-              </Text>
-            </TouchableOpacity>
+                  styles.postTypeButton,
+                  selectedPostType === 'Found' && styles.foundButton,
+                ]}
+                onPress={() => setSelectedPostType('Found')}>
+                <Text
+                  style={[
+                    styles.postTypeText,
+                    selectedPostType === 'Found' && styles.foundText,
+                  ]}>
+                  Found
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.postTypeButton,
+                  selectedPostType === 'Lost' && styles.lostButtonGray,
+                ]}
+                onPress={() => setSelectedPostType('Lost')}>
+                <Text
+                  style={[
+                    styles.postTypeText,
+                    selectedPostType === 'Lost' && styles.lostTextGray,
+                  ]}>
+                  Lost
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        <Gap height={16} />
+          <Gap height={16} />
 
-        {/* Item Name and Location Row */}
-        <View style={styles.rowContainer}>
-          <View style={styles.halfWidthContainer}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>Item's Name</Text>
-          <TextInput
-            placeholder="Type the item's name..."
-            placeholderTextColor="#666"
-            style={styles.textInput}
-            value={itemName}
-            onChangeText={setItemName}
-          />
-        </View>
+          {/* Item Name and Location Row */}
+          <View style={styles.rowContainer}>
+            <View style={styles.halfWidthContainer}>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Item's Name</Text>
+                <TextInput
+                  placeholder="Type the item's name..."
+                  placeholderTextColor="#666"
+                  style={styles.textInput}
+                  value={itemName}
+                  onChangeText={setItemName}
+                />
+              </View>
+            </View>
+            <View style={styles.halfWidthContainer}>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Location</Text>
+                <TextInput
+                  placeholder="Where is found or lost?"
+                  placeholderTextColor="#666"
+                  style={styles.textInput}
+                  value={location}
+                  onChangeText={setLocation}
+                />
+              </View>
+            </View>
           </View>
-          <View style={styles.halfWidthContainer}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>Location</Text>
-          <TextInput
-            placeholder="Where is found or lost?"
-            placeholderTextColor="#666"
-            style={styles.textInput}
-            value={location}
-            onChangeText={setLocation}
-          />
-        </View>
-          </View>
-        </View>
 
-        <Gap height={16} />
+          <Gap height={16} />
 
-        {/* Add Picture */}
+          {/* Add Picture */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Add Picture</Text>
-            <TouchableOpacity style={styles.pictureContainer} onPress={selectImage}>
+            <TouchableOpacity
+              style={styles.pictureContainer}
+              onPress={selectImage}>
               {selectedImage && selectedImage.uri ? (
-                <Image source={{uri: selectedImage.uri}} style={styles.selectedImage} />
+                <Image
+                  source={{uri: selectedImage.uri}}
+                  style={styles.selectedImage}
+                />
               ) : (
                 <View style={styles.pictureUploadGray}>
                   <View style={styles.cameraIconContainer}>
@@ -232,45 +236,50 @@ const AddItems = () => {
             </TouchableOpacity>
           </View>
 
-        <Gap height={16} />
+          <Gap height={16} />
 
-        {/* Contact Information */}
-        <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>Your Information/Contact</Text>
-        <TextInput
-          placeholder="Give your contact so they can contact you!"
-          placeholderTextColor="#666"
-          style={styles.textInput}
-          value={contact}
-          onChangeText={setContact}
-          // Added keyboardType for contact input
-          keyboardType="phone-pad"
-        />
-        </View>
-
-        <Gap height={16} />
-
-        {/* Description */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Description/Item Information</Text>
-          <View style={styles.descriptionContainer}>
-          <TextInput
-            placeholder="Describe the item, color, texture, etc..."
-            placeholderTextColor="#000"
-            multiline={true}
-            numberOfLines={4}
-            value={description}
-            onChangeText={setDescription}
-            style={styles.descriptionInput}
-          />
+          {/* Contact Information */}
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Your Information/Contact</Text>
+            <TextInput
+              placeholder="Give your contact so they can contact you!"
+              placeholderTextColor="#666"
+              style={styles.textInput}
+              value={contact}
+              onChangeText={setContact}
+              // Added keyboardType for contact input
+              keyboardType="phone-pad"
+            />
           </View>
-        </View>
 
-        <Gap height={32} />
+          <Gap height={16} />
 
-        <Button text="Post" onPress={handlePost} bgColor="#000000" textColor="#FFFFFF" />
+          {/* Description */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Description/Item Information</Text>
+            <View style={styles.descriptionContainer}>
+              <TextInput
+                placeholder="Describe the item, color, texture, etc..."
+                placeholderTextColor="#000"
+                multiline={true}
+                numberOfLines={4}
+                value={description}
+                onChangeText={setDescription}
+                style={styles.descriptionInput}
+              />
+            </View>
+          </View>
 
-                  <Gap height={100} />
+          <Gap height={32} />
+
+          <Button
+            text="Post"
+            onPress={handlePost}
+            bgColor="#000000"
+            textColor="#FFFFFF"
+          />
+
+          <Gap height={100} />
         </View>
       </ScrollView>
 

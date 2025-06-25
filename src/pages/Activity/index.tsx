@@ -10,7 +10,7 @@ import BottomNav from '../../components/molecules/BottomNav';
 import {ArrowLeftIcon} from '../../assets/index';
 import Checkbox from '../../components/atoms/Checkbox';
 
-const Activity = () => {
+const Activity = ({navigation}) => {
   const activities = [
     {
       id: 1,
@@ -33,7 +33,9 @@ const Activity = () => {
       <ScrollView
         style={styles.container}
         contentContainerStyle={{paddingBottom: 100}}>
-        <TouchableOpacity style={styles.backIcon}>
+        <TouchableOpacity
+          style={styles.backIcon}
+          onPress={() => navigation.goBack()}>
           <ArrowLeftIcon width={26} height={26} />
         </TouchableOpacity>
 

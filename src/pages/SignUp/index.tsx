@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Header from '../../components/molecules/header';
 import {Button, Gap} from '../../components';
@@ -6,7 +6,7 @@ import Logosignup from '../../assets/signup_pic';
 import TextInput from '../../components/atoms/textInput';
 import Checkbox from '../../components/atoms/Checkbox';
 
-const SignUp = () => {
+const SignUp = ({navigation}) => {
   return (
     <View style={styles.pageContainer}>
       <Header title="Let's Get Started!" subTitle="Fill the form to continue" />
@@ -21,12 +21,14 @@ const SignUp = () => {
         <TextInput text="Create a Password" placeholder="Enter your password" />
         <Checkbox label="I agree with terms of use" />
         <Gap height={10} />
-        <Button text="Sign Up" />
+        <Button text="Sign Up" onPress={() => navigation.replace('Login')} />
         <Gap height={12} />
         <View style={styles.signupWrapper}>
           <Text style={styles.signupText}>
             Already have an account?{' '}
-            <Text style={styles.signupLink}>Log In</Text>
+            <TouchableOpacity onPress={() => navigation.replace('Login')}>
+              <Text style={styles.signupLink}>Log In</Text>
+            </TouchableOpacity>
           </Text>
         </View>
       </View>

@@ -9,11 +9,8 @@ const ItemDetails = ({navigation}) => {
     <View>
       <View style={styles.header}>
         <View>
-          <TouchableOpacity>
-            <BackIcon
-              style={styles.button}
-              onPress={() => navigation.goBack()}
-            />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <BackIcon style={styles.button} />
           </TouchableOpacity>
         </View>
         <Text style={styles.text}>Items Details</Text>

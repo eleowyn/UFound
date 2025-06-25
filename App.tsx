@@ -4,7 +4,6 @@ import {
   Activity,
   AddItems,
   Dashboard,
-  Home,
   ItemDetails,
   Login,
   Search,
@@ -48,11 +47,6 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           name="ItemDetails"
           component={ItemDetails}
           options={{headerShown: false}}
@@ -63,13 +57,13 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Search"
-          component={Search}
+          name="SignUp"
+          component={SignUp}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="SignUp"
-          component={SignUp}
+          name="Search"
+          component={Search}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

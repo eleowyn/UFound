@@ -8,10 +8,13 @@ const Button = ({
   width = 347,
   height = 60,
   alignItems = 'center',
+  onPress,
 }) => {
   return (
     <View style={styles.container(alignItems)}>
-      <TouchableOpacity style={styles.button(bgColor, width, height)}>
+      <TouchableOpacity
+        style={styles.button(bgColor, width, height)}
+        onPress={onPress}>
         <Text style={styles.text(textColor)}>{text}</Text>
       </TouchableOpacity>
     </View>
@@ -34,6 +37,6 @@ const styles = StyleSheet.create({
   }),
   text: textColor => ({
     color: textColor,
-    fontFamily: 'Poppins-SemiBold'
+    fontFamily: 'Poppins-SemiBold',
   }),
 });
