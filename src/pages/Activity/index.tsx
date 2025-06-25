@@ -6,9 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import BottomNav from '../../components/molecules/BottomNav';
 import {ArrowLeftIcon} from '../../assets/index';
 import Checkbox from '../../components/atoms/Checkbox';
+import BottomTabs from '../../components/molecules/Tabs';
 
 const Activity = ({navigation}) => {
   const activities = [
@@ -62,7 +62,7 @@ const Activity = ({navigation}) => {
         ))}
       </ScrollView>
 
-      <BottomNav />
+      <BottomTabs navigation={navigation} activeIndex={0} />
     </View>
   );
 };

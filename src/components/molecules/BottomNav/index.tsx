@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-
 import {
   HomeIcon,
   SearchIcon,
@@ -9,36 +8,37 @@ import {
   MoreIcon,
 } from '../../../assets/index';
 
-const BottomNav = () => {
+const BottomNav = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Dashboard')}>
         <HomeIcon width={22} height={22} />
         <Text style={styles.label}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Search')}>
         <SearchIcon width={27} height={27} />
         <Text style={styles.label}>Search</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AddItems')}>
         <AddIcon width={27} height={27} />
         <Text style={styles.label}>Add</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Activity')}>
         <ActivityIcon width={22} height={22} />
         <Text style={styles.label}>Activity</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Account')}>
         <MoreIcon width={27} height={27} />
         <Text style={styles.label}>More</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 
 export default BottomNav;
 

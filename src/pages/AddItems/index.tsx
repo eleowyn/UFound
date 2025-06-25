@@ -281,7 +281,7 @@ const AddItems = ({navigation}) => {
         </View>
       </ScrollView>
 
-      <BottomTabs activeIndex={2} />
+      <BottomTabs navigation={navigation} activeIndex={0} />
       <FlashMessage position="top" />
     </View>
   );

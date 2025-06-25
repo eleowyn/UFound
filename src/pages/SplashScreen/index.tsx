@@ -1,9 +1,17 @@
+import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
 import Pic from '../../assets/SplashScreen.svg';
 import {LogoUFound} from '../../components';
 
-const SplashScreen = () => {
+const SplashScreen = ({navigation}) => {
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      navigation.replace('Dashboard');
+    }, 3000); // 3 seconds
+
+    return () => clearTimeout(timeout);
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <LogoUFound />
@@ -16,13 +24,9 @@ export default SplashScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFF',
+    backgroundColor: '#FFFFFF',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  text: {
-    fontSize: 50,
-    fontFamily: 'Poppins-SemiBold',
   },
 });

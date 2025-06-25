@@ -8,6 +8,14 @@ import {
   MoreIcon,
 } from '../../../assets/index';
 
+interface BottomTabsProps {
+  onTabPress?: (index: number) => void;
+  activeIndex?: number;
+  navigation?: {
+    navigate: (screen: string) => void;
+  };
+}
+
 const tabs = [
   {label: 'Home', icon: HomeIcon},
   {label: 'Search', icon: SearchIcon},
@@ -16,7 +24,34 @@ const tabs = [
   {label: 'More', icon: MoreIcon},
 ];
 
-const BottomTabs = ({onTabPress = () => {}, activeIndex = 0, navigation}) => {
+const BottomTabs: React.FC<BottomTabsProps> = ({
+  onTabPress = () => {},
+  activeIndex = 0,
+  navigation,
+}) => {
+  const handleTabPress = (index: number) => {
+    switch (index) {
+      case 0:
+        navigation?.navigate('Dashboard');
+        break;
+      case 1:
+        navigation?.navigate('Search');
+        break;
+      case 2:
+        navigation?.navigate('AddItems');
+        break;
+      case 3:
+        navigation?.navigate('Activity');
+        break;
+      case 4:
+        navigation?.navigate('Account');
+        break;
+      default:
+        break;
+    }
+    onTabPress(index);
+  };
+
   return (
     <View style={styles.container}>
       {tabs.map((tab, index) => {
@@ -30,7 +65,7 @@ const BottomTabs = ({onTabPress = () => {}, activeIndex = 0, navigation}) => {
             <TouchableOpacity
               key={index}
               style={styles.tab}
-              onPress={() => onTabPress(index)}>
+              onPress={() => handleTabPress(index)}>
               <View
                 style={[
                   styles.placeholder,
@@ -48,7 +83,7 @@ const BottomTabs = ({onTabPress = () => {}, activeIndex = 0, navigation}) => {
           <TouchableOpacity
             key={index}
             style={styles.tab}
-            onPress={() => onTabPress(index)}>
+            onPress={() => handleTabPress(index)}>
             <Icon
               width={24}
               height={24}

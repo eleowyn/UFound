@@ -16,7 +16,7 @@ const ItemDetails = ({navigation}) => {
         <Text style={styles.text}>Items Details</Text>
       </View>
       <Bigcard />
-      <BottomTabs />
+      <BottomTabs navigation={navigation} activeIndex={0} />
     </View>
   );
 };

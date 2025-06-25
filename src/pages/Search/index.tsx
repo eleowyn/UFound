@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import BottomTabs from '../../components/molecules/Tabs';
 import Card from '../../components/molecules/card';
-import { SearchIcon, Location } from '../../assets/index';
+import { SearchIcon } from '../../assets/index';
 
 const mostSearchedItems = [
   { id: '1', title: 'ID CARD', location: 'ID CARD' },
@@ -16,6 +24,7 @@ const mostSearchedItems = [
 ];
 
 const Search = () => {
+  const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
 
   const renderMostSearchedItem = ({ item }: { item: { id: string; title: string; location: string } }) => (
@@ -76,7 +85,8 @@ const Search = () => {
         showsVerticalScrollIndicator={false}
       />
 
-      <BottomTabs activeIndex={1} />
+      {/* Bottom Tabs */}
+      <BottomTabs navigation={navigation} activeIndex={1} />
     </View>
   );
 };
@@ -153,5 +163,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 16,
     paddingHorizontal: 8,
+  },
+  cardContainer: {
+    flex: 1,
+    marginHorizontal: 4,
   },
 });

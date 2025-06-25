@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message';
-import BottomNav from '../../components/molecules/BottomNav';
 import { ArrowLeftIcon } from '../../assets/index';
+import BottomTabs from '../../components/molecules/Tabs';
 
 const Account = ({ navigation }) => {
   const [photoUri, setPhotoUri] = useState(null);
@@ -114,8 +114,8 @@ const Account = ({ navigation }) => {
           <Text style={styles.infoValue}>08123456789</Text>
         </View>
       </ScrollView>
-
-      <BottomNav />
+      
+      <BottomTabs navigation={navigation} activeIndex={0} />
     </View>
   );
 };

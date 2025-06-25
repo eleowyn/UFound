@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Card from '../../components/molecules/card';
-import BottomNav from '../../components/molecules/BottomNav';
 import {AddItemsIcon, BrowseIcon, NotificationIcon} from '../../assets/index';
+import BottomTabs from '../../components/molecules/Tabs';
 
 const Dashboard = ({navigation}) => {
   return (
@@ -58,7 +58,7 @@ const Dashboard = ({navigation}) => {
         </View>
       </ScrollView>
 
-      <BottomNav />
+      <BottomTabs navigation={navigation} activeIndex={0} />
     </View>
   );
 };
