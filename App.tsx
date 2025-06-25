@@ -1,26 +1,80 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import Login from './src/pages/Login/index';
-import SignUp from './src/pages/SignUp';
-import Dashboard from './src/pages/Dashboard';
-import AddItems from './src/pages/AddItems';
-import Search from './src/pages/Search';
-import SplashScreen from './src/pages/SplashScreen';
-import Activity from './src/pages/Activity';
-import {ItemDetails} from './src/pages';
-import Account from './src/pages/Account';
+import {
+  Account,
+  Activity,
+  AddItems,
+  Dashboard,
+  Home,
+  ItemDetails,
+  Login,
+  Search,
+  SignUp,
+  SplashScreen,
+} from './src/pages';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+import FlashMessage from 'react-native-flash-message';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    // <SplashScreen/>
-    // <Login/>
-    // <SignUp />
-    // <AddItems />
-    // <ItemDetails />
-    // <Dashboard />
-    // <Search />
-    // <Activity/>
-    <Account/>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Account"
+          component={Account}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Activity"
+          component={Activity}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddItems"
+          component={AddItems}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ItemDetails"
+          component={ItemDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+      <FlashMessage position="top" />
+    </NavigationContainer>
   );
 };
 
