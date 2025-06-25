@@ -10,7 +10,7 @@ import Card from '../../components/molecules/card';
 import BottomNav from '../../components/molecules/BottomNav';
 import {AddItemsIcon, BrowseIcon, NotificationIcon} from '../../assets/index';
 
-const Dashboard = () => {
+const Dashboard = ({navigation}) => {
   return (
     <View style={styles.page}>
       <ScrollView
@@ -29,10 +29,14 @@ const Dashboard = () => {
         </View>
 
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={[styles.circleButton, styles.browseBg]}>
+          <TouchableOpacity
+            style={[styles.circleButton, styles.browseBg]}
+            onPress={() => navigation.replace('Search')}>
             <BrowseIcon width={40} height={40} />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.circleButton, styles.addBg]}>
+          <TouchableOpacity
+            style={[styles.circleButton, styles.addBg]}
+            onPress={() => navigation.replace('AddItems')}>
             <AddItemsIcon width={40} height={40} />
           </TouchableOpacity>
         </View>

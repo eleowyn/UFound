@@ -1,28 +1,28 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { 
-  ActivityIcon, 
-  AddIcon, 
-  HomeIcon, 
-  SearchIcon, 
-  MoreIcon 
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  ActivityIcon,
+  AddIcon,
+  HomeIcon,
+  SearchIcon,
+  MoreIcon,
 } from '../../../assets/index';
 
 const tabs = [
-  { label: 'Home', icon: HomeIcon },
-  { label: 'Search', icon: SearchIcon },
-  { label: 'Add', icon: AddIcon },
-  { label: 'Activity', icon: ActivityIcon },
-  { label: 'More', icon: MoreIcon },
+  {label: 'Home', icon: HomeIcon},
+  {label: 'Search', icon: SearchIcon},
+  {label: 'Add', icon: AddIcon},
+  {label: 'Activity', icon: ActivityIcon},
+  {label: 'More', icon: MoreIcon},
 ];
 
-const BottomTabs = ({ onTabPress = () => {}, activeIndex = 0 }) => {
+const BottomTabs = ({onTabPress = () => {}, activeIndex = 0, navigation}) => {
   return (
     <View style={styles.container}>
       {tabs.map((tab, index) => {
         const Icon = tab.icon;
         const isActive = index === activeIndex;
-        
+
         // Add error handling for undefined icons
         if (!Icon) {
           console.warn(`Icon for ${tab.label} is undefined`);
@@ -30,9 +30,13 @@ const BottomTabs = ({ onTabPress = () => {}, activeIndex = 0 }) => {
             <TouchableOpacity
               key={index}
               style={styles.tab}
-              onPress={() => onTabPress(index)}
-            >
-              <View style={[styles.placeholder, isActive && styles.activePlaceholder]} />
+              onPress={() => onTabPress(index)}>
+              <View
+                style={[
+                  styles.placeholder,
+                  isActive && styles.activePlaceholder,
+                ]}
+              />
               <Text style={[styles.label, isActive && styles.activeLabel]}>
                 {tab.label}
               </Text>
@@ -44,12 +48,11 @@ const BottomTabs = ({ onTabPress = () => {}, activeIndex = 0 }) => {
           <TouchableOpacity
             key={index}
             style={styles.tab}
-            onPress={() => onTabPress(index)}
-          >
-            <Icon 
-              width={24} 
-              height={24} 
-              fill={isActive ? '#000' : '#666'} 
+            onPress={() => onTabPress(index)}>
+            <Icon
+              width={24}
+              height={24}
+              fill={isActive ? '#000' : '#666'}
               color={isActive ? '#000' : '#666'} // fallback prop
             />
             <Text style={[styles.label, isActive && styles.activeLabel]}>
