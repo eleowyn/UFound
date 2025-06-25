@@ -8,7 +8,7 @@ import Login from './Login';
 import Search from './Search';
 import SignUp from './SignUp';
 import SplashScreen from './SplashScreen';
-
+//not using page home
 export {
   Account,
   Activity,
