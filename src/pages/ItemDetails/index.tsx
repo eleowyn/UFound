@@ -4,13 +4,16 @@ import {BackIcon} from '../../assets';
 import {Bigcard} from '../../components';
 import BottomTabs from '../../components/molecules/Tabs';
 
-const ItemDetails = () => {
+const ItemDetails = ({navigation}) => {
   return (
     <View>
       <View style={styles.header}>
         <View>
           <TouchableOpacity>
-            <BackIcon style={styles.button} />
+            <BackIcon
+              style={styles.button}
+              onPress={() => navigation.goBack()}
+            />
           </TouchableOpacity>
         </View>
         <Text style={styles.text}>Items Details</Text>
