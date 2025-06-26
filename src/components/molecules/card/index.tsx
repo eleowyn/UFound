@@ -1,24 +1,48 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
-import Foundlabel from '../../atoms/statuslabel/foundlabel';
-import NoPhoto from '../../../assets/NoPhoto.jpg';
-import {Location} from '../../../assets/index';
+import {Location} from '../../../assets';
 
-const Card = ({title = 'Lost Item', location = 'Unklab', status = 'Found'}) => {
+interface CardProps {
+  title?: string;
+  location?: string;
+  status?: string;
+  image?: string;
+  date?: string;
+}
+
+const Card: React.FC<CardProps> = ({
+  title = 'Charger',
+  location = 'GK2-108',
+  status = 'Found',
+  image,
+  date = 'Oct 2, 2018',
+}) => {
   return (
     <View style={styles.container}>
-      <View>
-        <Image source={NoPhoto} style={styles.pic} />
-      </View>
-      <View style={styles.description}>
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <View style={styles.subtitle}>
-            <Location width={13} height={15} fill="#666" />
-            <Text style={styles.subtitleText}>{location}</Text>
-          </View>
+      <Image 
+        source={image ? {uri: image} : require('../../../assets/NoPhoto.jpg')} 
+        style={styles.pic} 
+      />
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>{title}</Text>
+        <View style={styles.locationContainer}>
+          <Location width={12} height={12} fill="#666" />
+          <Text style={styles.locationText}>{location}</Text>
         </View>
-        <Foundlabel />
+        <View style={styles.dateContainer}>
+          <Text style={styles.dateText}>{date}</Text>
+        </View>
+      </View>
+      <View style={[
+        styles.statusContainer,
+        {backgroundColor: status === 'Found' ? '#B4FFB1' : '#FFC4C5'},
+      ]}>
+        <Text style={[
+          styles.statusText,
+          {color: status === 'Found' ? '#2B6000' : '#600003'},
+        ]}>
+          {status}
+        </Text>
       </View>
     </View>
   );
@@ -28,46 +52,62 @@ export default Card;
 
 const styles = StyleSheet.create({
   container: {
-    height: 182,
-    width: 136,
-    borderWidth: 1,
-    borderRadius: 11,
-    borderColor: '#E0E0E0',
-    alignItems: 'center',
-    padding: 1,
+    width: 160,
     backgroundColor: '#fff',
-  },
-  description: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  textContainer: {
-    flex: 1,
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 16,
   },
   pic: {
-    height: 134,
-    width: 134,
-    borderTopLeftRadius: 11,
-    borderTopRightRadius: 11,
+    width: '100%',
+    height: 160,
+    resizeMode: 'cover',
+  },
+  contentContainer: {
+    padding: 12,
+    backgroundColor: '#fff',
   },
   title: {
-    fontSize: 11,
-    fontFamily: 'Poppins-Bold',
+    fontSize: 14,
+    fontFamily: 'Poppins-SemiBold',
     color: '#333',
-    marginBottom: 2,
+    marginBottom: 4,
   },
-  subtitle: {
+  locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    marginBottom: 4,
   },
-  subtitleText: {
-    fontSize: 7,
-    fontFamily: 'Poppins-SemiBold',
+  locationText: {
+    fontSize: 10,
+    fontFamily: 'Poppins-Regular',
     color: '#666',
+  },
+  dateContainer: {
+    marginTop: 2,
+  },
+  dateText: {
+    fontSize: 10,
+    fontFamily: 'Poppins-Regular',
+    color: '#666',
+  },
+  statusContainer: {
+    width: '100%',
+    paddingVertical: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statusText: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Medium',
   },
 });

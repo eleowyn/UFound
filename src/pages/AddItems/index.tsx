@@ -1,40 +1,66 @@
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   ScrollView,
   Alert,
-  Image,
-  TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
+
+import Loading from '../../components/molecules/Loading';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../components/molecules/header';
 import {Button, Gap} from '../../components';
 import BottomTabs from '../../components/molecules/Tabs';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
+import DateTimePicker from '../../components/molecules/DateTimePicker';
+import PostTypeSelector from '../../components/molecules/PostTypeSelector';
+import FormInput from '../../components/molecules/FormInput';
+import ImagePicker from '../../components/molecules/ImagePicker';
 
-const AddItems = ({navigation}) => {
-  const [selectedPostType, setSelectedPostType] = useState('Found');
+interface NavigationProps {
+  goBack: () => void;
+  replace: (screen: string) => void;
+  navigate: (screen: string) => void;
+}
+
+interface AddItemsProps {
+  navigation: NavigationProps;
+}
+
+const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
+  const [selectedPostType, setSelectedPostType] = useState<'Found' | 'Lost'>(
+    'Found',
+  );
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
   const [itemName, setItemName] = useState('');
   const [location, setLocation] = useState('');
   const [contact, setContact] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
 
-  const onDateChange = (event, selectedDate) => {
+  const onDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
     }
   };
 
+  const onTimeChange = (event: any, selectedTime?: Date) => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      setDate(selectedTime);
+    }
+  };
+
   const openCamera = () => {
+    setLoading(true);
     launchCamera({mediaType: 'photo'}, response => {
+      setLoading(false);
       if (response.didCancel) {
         showMessage({
           message: 'Image selection canceled',
@@ -56,7 +82,9 @@ const AddItems = ({navigation}) => {
   };
 
   const openGallery = () => {
+    setLoading(true);
     launchImageLibrary({mediaType: 'photo'}, response => {
+      setLoading(false);
       if (response.didCancel) {
         showMessage({
           message: 'Image selection canceled',
@@ -91,18 +119,25 @@ const AddItems = ({navigation}) => {
   };
 
   const handlePost = () => {
+    setLoading(true);
     if (!itemName || !location || !contact || !description) {
       showMessage({
         message: 'Please fill all required fields',
         type: 'danger',
       });
+      setLoading(false);
       return;
     }
 
-    showMessage({
-      message: 'Item posted successfully!',
-      type: 'success',
-    });
+    // Simulate API call with timeout
+    setTimeout(() => {
+      setLoading(false);
+      showMessage({
+        message: 'Item posted successfully!',
+        type: 'success',
+      });
+      navigation.goBack();
+    }, 2000);
   };
 
   return (
@@ -114,7 +149,6 @@ const AddItems = ({navigation}) => {
         <Header
           title="Add Items"
           subTitle="Find your items and help people find it too!"
-          showBackButton={true}
         />
 
         <View style={styles.formContainer}>
@@ -129,89 +163,47 @@ const AddItems = ({navigation}) => {
 
           <Gap height={24} />
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Date & Time</Text>
-            <TouchableOpacity
-              style={styles.dateTimeInput}
-              onPress={() => {
-                setShowDatePicker(true);
-              }}>
-              <Text style={styles.dateTimeText}>
-                {date.toLocaleDateString('en-US')}
-              </Text>
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                onChange={onDateChange}
-              />
-            )}
-          </View>
+          <DateTimePicker
+            label="Date & Time"
+            date={date}
+            showDate={showDatePicker}
+            showTime={showTimePicker}
+            onDateChange={onDateChange}
+            onTimeChange={onTimeChange}
+            onShowDatePicker={() => setShowDatePicker(true)}
+            onShowTimePicker={() => setShowTimePicker(true)}
+          />
 
           <Gap height={16} />
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Post Type</Text>
-            <View style={styles.postTypeContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.postTypeButton,
-                  selectedPostType === 'Found' && styles.foundButton,
-                ]}
-                onPress={() => setSelectedPostType('Found')}>
-                <Text
-                  style={[
-                    styles.postTypeText,
-                    selectedPostType === 'Found' && styles.foundText,
-                  ]}>
-                  Found
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.postTypeButton,
-                  selectedPostType === 'Lost' && styles.lostButton,
-                ]}
-                onPress={() => setSelectedPostType('Lost')}>
-                <Text
-                  style={[
-                    styles.postTypeText,
-                    selectedPostType === 'Lost' && styles.lostText,
-                  ]}>
-                  Lost
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <PostTypeSelector
+              selectedType={selectedPostType}
+              onSelect={setSelectedPostType}
+            />
           </View>
 
           <Gap height={16} />
 
           <View style={styles.rowContainer}>
             <View style={styles.halfWidthContainer}>
-              <View style={styles.inputWrapper}>
-                <Text style={styles.inputLabel}>Item's Name</Text>
-                <TextInput
-                  placeholder="Type the item's name..."
-                  placeholderTextColor="#666"
-                  style={styles.textInput}
-                  value={itemName}
-                  onChangeText={setItemName}
-                />
-              </View>
+              <FormInput
+                label="Item's Name"
+                placeholder="Type the item's name..."
+                placeholderTextColor="#666"
+                value={itemName}
+                onChangeText={setItemName}
+              />
             </View>
             <View style={styles.halfWidthContainer}>
-              <View style={styles.inputWrapper}>
-                <Text style={styles.inputLabel}>Location</Text>
-                <TextInput
-                  placeholder="Where is found or lost?"
-                  placeholderTextColor="#666"
-                  style={styles.textInput}
-                  value={location}
-                  onChangeText={setLocation}
-                />
-              </View>
+              <FormInput
+                label="Location"
+                placeholder="Where is found or lost?"
+                placeholderTextColor="#666"
+                value={location}
+                onChangeText={setLocation}
+              />
             </View>
           </View>
 
@@ -219,54 +211,34 @@ const AddItems = ({navigation}) => {
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Add Picture</Text>
-            <TouchableOpacity
-              style={styles.pictureContainer}
-              onPress={selectImage}>
-              {selectedImage && selectedImage.uri ? (
-                <Image
-                  source={{uri: selectedImage.uri}}
-                  style={styles.selectedImage}
-                />
-              ) : (
-                <View style={styles.pictureUpload}>
-                  <View style={styles.cameraIconContainer}>
-                    <Text style={styles.cameraIcon}>📷</Text>
-                  </View>
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
-
-          <Gap height={16} />
-
-          <View style={styles.inputWrapper}>
-            <Text style={styles.inputLabel}>Your Information/Contact</Text>
-            <TextInput
-              placeholder="Give your contact so they can contact you!"
-              placeholderTextColor="#666"
-              style={styles.textInput}
-              value={contact}
-              onChangeText={setContact}
-              keyboardType="phone-pad"
+            <ImagePicker
+              imageUri={selectedImage?.uri || null}
+              onSelectImage={selectImage}
             />
           </View>
 
           <Gap height={16} />
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Description/Item Information</Text>
-            <View style={styles.descriptionContainer}>
-              <TextInput
-                placeholder="Describe the item, color, texture, etc..."
-                placeholderTextColor="#000"
-                multiline={true}
-                numberOfLines={4}
-                value={description}
-                onChangeText={setDescription}
-                style={styles.descriptionInput}
-              />
-            </View>
-          </View>
+          <FormInput
+            label="Your Information/Contact"
+            placeholder="Give your contact so they can contact you!"
+            placeholderTextColor="#666"
+            value={contact}
+            onChangeText={setContact}
+            keyboardType="phone-pad"
+          />
+
+          <Gap height={16} />
+
+          <FormInput
+            label="Description/Item Information"
+            placeholder="Describe the item, color, texture, etc..."
+            placeholderTextColor="#000"
+            multiline={true}
+            numberOfLines={4}
+            value={description}
+            onChangeText={setDescription}
+          />
 
           <Gap height={32} />
 
@@ -283,6 +255,7 @@ const AddItems = ({navigation}) => {
 
       <BottomTabs navigation={navigation} activeIndex={0} />
       <FlashMessage position="top" />
+      {loading && <Loading />}
     </View>
   );
 };
@@ -296,6 +269,9 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+  },
+  contentContainer: {
+    paddingBottom: 20,
   },
   formContainer: {
     backgroundColor: '#FFFFFF',
@@ -314,14 +290,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 5,
   },
-  infoIcon: {
-    width: 32,
-    height: 32,
-    backgroundColor: '#4CAF50',
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   infoIconGreen: {
     width: 32,
     height: 32,
@@ -330,33 +298,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
-  },
-  postTypeButton: {
-    borderRadius: 16,
-    backgroundColor: '#F0F0F0',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    minWidth: 70,
-    alignItems: 'center',
-  },
-  foundButton: {
-    backgroundColor: '#3CB371',
-    borderColor: '#3CB371',
-  },
-  lostButtonGray: {
-    backgroundColor: '#FFC6C7',
-    borderColor: '#FFC6C7',
-  },
-  postTypeText: {
-    fontSize: 12,
-    fontFamily: 'Poppins-Medium',
-    color: '#666',
-  },
-  foundText: {
-    color: '#FFFFFF',
-  },
-  lostTextGray: {
-    color: '#666',
   },
   plusIcon: {
     color: '#FFFFFF',
@@ -374,104 +315,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     width: '100%',
   },
-  label: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    marginBottom: 6,
-    color: '#000',
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    marginBottom: 6,
-    color: '#000000',
-  },
-  textInput: {
-    height: 45,
-    borderWidth: 1,
-    borderColor: '#CFCFCF',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    backgroundColor: '#fff',
-    color: '#000',
-  },
-  dateTimeButton: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#CFCFCF',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  dateTimeText: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    color: '#000',
-  },
-  timeButton: {
-    marginTop: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: '#4CAF50',
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-  },
-  timeButtonText: {
-    fontSize: 12,
-    fontFamily: 'Poppins-Medium',
-    color: '#FFFFFF',
-  },
-  dropdown: {
-    height: 60,
-    borderWidth: 1,
-    borderColor: '#CFCFCF',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  dropdownText: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    color: '#A0A0A0',
-  },
-  postTypeContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 6,
-  },
-  postTypeButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 16,
-    backgroundColor: '#F0F0F0',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    minWidth: 70,
-    alignItems: 'center',
-  },
-  foundButton: {
-    backgroundColor: '#4CAF50',
-    borderColor: '#4CAF50',
-  },
-  lostButton: {
-    backgroundColor: '#FFA726',
-    borderColor: '#FFA726',
-  },
-  postTypeText: {
-    fontSize: 12,
-    fontFamily: 'Poppins-Medium',
-    color: '#666',
-  },
-  foundText: {
-    color: '#FFFFFF',
-  },
-  lostText: {
-    color: '#FFFFFF',
-  },
   rowContainer: {
     flexDirection: 'row',
     gap: 12,
@@ -480,93 +323,10 @@ const styles = StyleSheet.create({
   halfWidthContainer: {
     flex: 1,
   },
-  pictureContainer: {
-    alignItems: 'center',
-    marginTop: 6,
-  },
-  pictureUpload: {
-    width: '100%',
-    height: 120,
-    backgroundColor: '#F0F0F0',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  cameraIconContainer: {
-    backgroundColor: '#CFCFCF',
-    width: 80,
-    height: 60,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cameraIcon: {
-    fontSize: 20,
-    opacity: 0.7,
-  },
-  selectedImage: {
-    width: '100%',
-    height: 120,
-    borderRadius: 12,
-    resizeMode: 'cover',
-  },
-  descriptionInput: {
-    height: 100,
-    paddingTop: 12,
-  },
-  descriptionContainer: {
-    borderWidth: 1,
-    borderColor: '#CFCFCF',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    backgroundColor: '#fff',
-  },
-  dateTimeInput: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#CFCFCF',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  dateTimeText: {
+  label: {
     fontSize: 14,
     fontFamily: 'Poppins-Medium',
+    marginBottom: 6,
     color: '#000',
-  },
-  pictureContainer: {
-    alignItems: 'center',
-    marginTop: 6,
-  },
-  pictureUpload: {
-    width: '100%',
-    height: 120,
-    backgroundColor: '#D3D3D3',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  cameraIconContainer: {
-    backgroundColor: '#CFCFCF',
-    width: 80,
-    height: 60,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cameraIcon: {
-    fontSize: 20,
-    opacity: 0.7,
-  },
-  selectedImage: {
-    width: '100%',
-    height: 120,
-    borderRadius: 12,
-    resizeMode: 'cover',
   },
 });

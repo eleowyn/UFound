@@ -1,10 +1,22 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, ViewStyle, TextStyle, StyleProp} from 'react-native';
 import React from 'react';
 
-const Foundlabel = ({width = 76, height = 22, fontSize = 13}) => {
+interface FoundlabelProps {
+  width?: number;
+  height?: number;
+  fontSize?: number;
+  style?: StyleProp<ViewStyle>;
+}
+
+const Foundlabel: React.FC<FoundlabelProps> = ({
+  width = 76,
+  height = 22,
+  fontSize = 13,
+  style,
+}) => {
   return (
-    <View style={styles.label(width, height)}>
-      <Text style={styles.text(fontSize)}>Found</Text>
+    <View style={[styles.label, {width, height}, style]}>
+      <Text style={[styles.text, {fontSize}]}>Found</Text>
     </View>
   );
 };
@@ -12,17 +24,14 @@ const Foundlabel = ({width = 76, height = 22, fontSize = 13}) => {
 export default Foundlabel;
 
 const styles = StyleSheet.create({
-  label: (width, height) => ({
-    width: width,
-    height: height,
+  label: {
     borderRadius: 37,
     backgroundColor: '#B4FFB1',
     alignItems: 'center',
     justifyContent: 'center',
-  }),
-  text: fontSize => ({
+  } as ViewStyle,
+  text: {
     color: '#2B6000',
     fontFamily: 'Poppins-SemiBold',
-    fontSize: fontSize,
-  }),
+  } as TextStyle,
 });

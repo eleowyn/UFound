@@ -1,10 +1,20 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Lostlabel = ({width = 76, height = 22, fontSize = 13}) => {
+interface LostlabelProps {
+  width?: number;
+  height?: number;
+  fontSize?: number;
+}
+
+const Lostlabel: React.FC<LostlabelProps> = ({
+  width = 76,
+  height = 22,
+  fontSize = 13,
+}) => {
   return (
-    <View style={styles.label(width, height)}>
-      <Text style={styles.text(fontSize)}>Found</Text>
+    <View style={[styles.label, {width, height}]}>
+      <Text style={[styles.text, {fontSize}]}>Lost</Text>
     </View>
   );
 };
@@ -12,17 +22,14 @@ const Lostlabel = ({width = 76, height = 22, fontSize = 13}) => {
 export default Lostlabel;
 
 const styles = StyleSheet.create({
-  label: (width, height) => ({
-    width: width,
-    height: height,
+  label: {
     borderRadius: 37,
     backgroundColor: '#FFC4C5',
     alignItems: 'center',
     justifyContent: 'center',
-  }),
-  text: fontSize => ({
+  },
+  text: {
     color: '#600003',
     fontFamily: 'Poppins-SemiBold',
-    fontSize: fontSize,
-  }),
+  },
 });

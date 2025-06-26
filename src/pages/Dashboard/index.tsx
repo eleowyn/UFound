@@ -10,7 +10,13 @@ import Card from '../../components/molecules/card';
 import {AddItemsIcon, BrowseIcon, NotificationIcon} from '../../assets/index';
 import BottomTabs from '../../components/molecules/Tabs';
 
-const Dashboard = ({navigation}) => {
+import {NavigationProp} from '@react-navigation/native';
+
+interface DashboardProps {
+  navigation: NavigationProp<any>;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
   return (
     <View style={styles.page}>
       <ScrollView
@@ -18,7 +24,7 @@ const Dashboard = ({navigation}) => {
         contentContainerStyle={{paddingBottom: 100}}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Hey, Elshera</Text>
+            <Text style={styles.greeting}>Hey, elsherg</Text>
             <Text style={styles.subText}>
               Find your items and help people find it too!
             </Text>
@@ -31,12 +37,12 @@ const Dashboard = ({navigation}) => {
         <View style={styles.buttonRow}>
           <TouchableOpacity
             style={[styles.circleButton, styles.browseBg]}
-            onPress={() => navigation.replace('Search')}>
+            onPress={() => navigation.navigate('Search')}>
             <BrowseIcon width={40} height={40} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.circleButton, styles.addBg]}
-            onPress={() => navigation.replace('AddItems')}>
+            onPress={() => navigation.navigate('AddItems')}>
             <AddItemsIcon width={40} height={40} />
           </TouchableOpacity>
         </View>
@@ -48,14 +54,15 @@ const Dashboard = ({navigation}) => {
 
         <View style={styles.cardContainer}>
           <View style={styles.cardGrid}>
-            <Card title="Charger" location="GKC-103" />
-            <Card title="Umbrella" location="Library" />
-            <Card title="Notebook" location="DORM 2" />
-            <Card title="Pencil Case" location="Canteen" />
-            <Card title="Wallet" location="GKC-108" />
-            <Card title="Bottle" location="Sports Hall" />
+            <Card title="Charger" location="GK2-108" status="Found" date="Oct 2, 2018" />
+            <Card title="Charger" location="GK2-108" status="Lost" date="Oct 2, 2018" />
+            <Card title="Charger" location="GK2-108" status="Found" date="Oct 2, 2018" />
+            <Card title="Charger" location="GK2-108" status="Lost" date="Oct 2, 2018" />
+            <Card title="Charger" location="GK2-108" status="Found" date="Oct 2, 2018" />
+            <Card title="Charger" location="GK2-108" status="Lost" date="Oct 2, 2018" />
           </View>
         </View>
+
       </ScrollView>
 
       <BottomTabs navigation={navigation} activeIndex={0} />
@@ -99,7 +106,6 @@ const styles = StyleSheet.create({
   },
   circleButton: {
     width: 60,
-    height: 60,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
