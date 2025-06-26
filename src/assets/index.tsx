@@ -10,6 +10,7 @@ import Location from './Location.svg';
 import ArrowLeftIcon from './backIcon.svg';
 import BackIcon from './backIcon.svg';
 import Ellips from './EllipsIcon.svg';
+import ProfileIcon from './ProfileIcon.svg';
 
 export {
   HomeIcon,
@@ -24,4 +25,5 @@ export {
   ArrowLeftIcon,
   Ellips,
   BackIcon,
+  ProfileIcon,
 };

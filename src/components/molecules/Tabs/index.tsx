@@ -5,7 +5,7 @@ import {
   AddIcon,
   HomeIcon,
   SearchIcon,
-  MoreIcon,
+  ProfileIcon,
 } from '../../../assets/index';
 
 interface BottomTabsProps {
@@ -21,7 +21,7 @@ const tabs = [
   {label: 'Search', icon: SearchIcon, size: 33},
   {label: 'Add', icon: AddIcon, size: 33},
   {label: 'Activity', icon: ActivityIcon, size: 25},
-  {label: 'More', icon: MoreIcon, size: 33},
+  {label: 'Account', icon: ProfileIcon, size: 45},
 ];
 
 const BottomTabs: React.FC<BottomTabsProps> = ({
