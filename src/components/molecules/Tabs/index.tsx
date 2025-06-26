@@ -19,9 +19,9 @@ interface BottomTabsProps {
 const tabs = [
   {label: 'Home', icon: HomeIcon, size: 26},
   {label: 'Search', icon: SearchIcon, size: 33},
-  {label: 'Add', icon: AddIcon, size: 33},
+  {label: 'Add', icon: AddIcon, size: 35},
   {label: 'Activity', icon: ActivityIcon, size: 25},
-  {label: 'Account', icon: ProfileIcon, size: 45},
+  {label: 'Account', icon: ProfileIcon, size: 43},
 ];
 
 const BottomTabs: React.FC<BottomTabsProps> = ({
