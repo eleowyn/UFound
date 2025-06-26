@@ -27,6 +27,16 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="Account"
           component={Account}
           options={{headerShown: false}}
@@ -49,16 +59,6 @@ const App = () => {
         <Stack.Screen
           name="ItemDetails"
           component={ItemDetails}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
           options={{headerShown: false}}
         />
         <Stack.Screen

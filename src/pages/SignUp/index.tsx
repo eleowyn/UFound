@@ -1,38 +1,62 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Header from '../../components/molecules/header';
 import {Button, Gap} from '../../components';
 import Logosignup from '../../assets/signup_pic';
 import TextInput from '../../components/atoms/textInput';
 import Checkbox from '../../components/atoms/Checkbox';
-
+import Loading from '../../components/molecules/Loading';
+import {showMessage} from 'react-native-flash-message';
 const SignUp = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      showMessage({
+        message: 'Account created successfully!',
+        type: 'success',
+      });
+      navigation.replace('Login');
+    }, 2000);
+  };
+
   return (
-    <View style={styles.pageContainer}>
-      <Header title="Let's Get Started!" subTitle="Fill the form to continue" />
-      <Logosignup width={210} height={210} style={styles.signupPic} />
-      <View style={styles.contentContainer}>
-        <Gap height={2} />
-        <TextInput
-          text="Your Email Address"
-          placeholder="Enter your email address"
+    <>
+      <View style={styles.pageContainer}>
+        <Header
+          title="Let's Get Started!"
+          subTitle="Fill the form to continue"
         />
-        <Gap height={16} />
-        <TextInput text="Create a Password" placeholder="Enter your password" />
-        <Checkbox label="I agree with terms of use" />
-        <Gap height={10} />
-        <Button text="Sign Up" onPress={() => navigation.replace('Login')} />
-        <Gap height={12} />
-        <View style={styles.signupWrapper}>
-          <Text style={styles.signupText}>
-            Already have an account?{' '}
-            <TouchableOpacity onPress={() => navigation.replace('Login')}>
-              <Text style={styles.signupLink}>Log In</Text>
-            </TouchableOpacity>
-          </Text>
+        <Logosignup width={210} height={210} style={styles.signupPic} />
+        <View style={styles.contentContainer}>
+          <Gap height={2} />
+          <TextInput
+            text="Your Email Address"
+            placeholder="Enter your email address"
+          />
+          <Gap height={16} />
+          <TextInput
+            text="Create a Password"
+            placeholder="Enter your password"
+          />
+          <Checkbox label="I agree with terms of use" />
+          <Gap height={10} />
+          <Button text="Sign Up" onPress={handleSignUp} />
+          <Gap height={12} />
+          <View style={styles.signupWrapper}>
+            <Text style={styles.signupText}>
+              Already have an account?{' '}
+              <TouchableOpacity onPress={() => navigation.replace('Login')}>
+                <Text style={styles.signupLink}>Log In</Text>
+              </TouchableOpacity>
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+      {loading && <Loading />}
+    </>
   );
 };
 

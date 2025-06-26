@@ -6,7 +6,7 @@ import {LogoUFound} from '../../components';
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigation.replace('Dashboard');
+      navigation.replace('SignUp');
     }, 3000); // 3 seconds
 
     return () => clearTimeout(timeout);

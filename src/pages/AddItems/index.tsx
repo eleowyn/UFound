@@ -289,7 +289,6 @@ const AddItems = ({navigation}) => {
 
 export default AddItems;
 
-
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
