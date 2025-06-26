@@ -1,22 +1,19 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Alert} from 'react-native';
 
-import Loading from '../../components/molecules/Loading';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import Header from '../../components/molecules/header';
-import {Button, Gap} from '../../components';
-import BottomTabs from '../../components/molecules/Tabs';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
-import DateTimePicker from '../../components/molecules/DateTimePicker';
-import PostTypeSelector from '../../components/molecules/PostTypeSelector';
-import FormInput from '../../components/molecules/FormInput';
-import ImagePicker from '../../components/molecules/ImagePicker';
+import {
+  Loading,
+  Header,
+  Button,
+  Gap,
+  BottomTabs,
+  DateTimePicker,
+  PostTypeSelector,
+  FormInput,
+  ImagePicker,
+} from '../../components/index';
 
 interface NavigationProps {
   goBack: () => void;

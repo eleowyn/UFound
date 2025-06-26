@@ -7,8 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {ArrowLeftIcon} from '../../assets/index';
-import Checkbox from '../../components/atoms/Checkbox';
-import BottomTabs from '../../components/molecules/Tabs';
+import {Checkbox, BottomTabs} from '../../components/index';
 
 const Activity = ({navigation}) => {
   const activities = [

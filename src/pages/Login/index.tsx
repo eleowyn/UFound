@@ -1,13 +1,22 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import Header from '../../components/molecules/header';
-import {Button, Gap} from '../../components';
-import Logologin from '../../assets/Loginlogo.svg';
-import TextInput from '../../components/atoms/textInput';
-import Checkbox from '../../components/atoms/Checkbox';
-import BottomTabs from '../../components/molecules/Tabs';
-import Loading from '../../components/molecules/Loading';
 import {showMessage} from 'react-native-flash-message';
+import Logologin from '../../assets/Loginlogo.svg';
+
+import {
+  Header,
+  Button,
+  Gap,
+  textInput as TextInput,
+  Checkbox,
+  BottomTabs,
+  Loading,
+} from '../../components/index';
+
+// import TextInput from '../../components/atoms/textInput';
+// import Checkbox from '../../components/atoms/Checkbox';
+// import BottomTabs from '../../components/molecules/Tabs';
+// import Loading from '../../components/molecules/Loading';
 
 const Login = ({navigation}) => {
   const [loading, setLoading] = useState(false);

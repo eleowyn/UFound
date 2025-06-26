@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -7,33 +7,40 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import BottomTabs from '../../components/molecules/Tabs';
-import Card from '../../components/molecules/card';
-import { SearchIcon } from '../../assets/index';
+import {useNavigation} from '@react-navigation/native';
+import {SearchIcon} from '../../assets/index';
+import {BottomTabs, Card} from '../../components/index';
 
 const mostSearchedItems = [
-  { id: '1', title: 'ID CARD', location: 'ID CARD' },
-  { id: '2', title: 'ID CARD', location: 'ID CARD' },
-  { id: '3', title: 'ID CARD', location: 'ID CARD' },
-  { id: '4', title: 'ID CARD', location: 'ID CARD' },
-  { id: '5', title: 'ID CARD', location: 'ID CARD' },
-  { id: '6', title: 'ID CARD', location: 'ID CARD' },
-  { id: '7', title: 'ID CARD', location: 'ID CARD' },
-  { id: '8', title: 'ID CARD', location: 'ID CARD' },
+  {id: '1', title: 'ID CARD', location: 'ID CARD'},
+  {id: '2', title: 'ID CARD', location: 'ID CARD'},
+  {id: '3', title: 'ID CARD', location: 'ID CARD'},
+  {id: '4', title: 'ID CARD', location: 'ID CARD'},
+  {id: '5', title: 'ID CARD', location: 'ID CARD'},
+  {id: '6', title: 'ID CARD', location: 'ID CARD'},
+  {id: '7', title: 'ID CARD', location: 'ID CARD'},
+  {id: '8', title: 'ID CARD', location: 'ID CARD'},
 ];
 
 const Search = () => {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
 
-  const renderMostSearchedItem = ({ item }: { item: { id: string; title: string; location: string } }) => (
+  const renderMostSearchedItem = ({
+    item,
+  }: {
+    item: {id: string; title: string; location: string};
+  }) => (
     <TouchableOpacity style={styles.mostSearchedItem}>
       <Text style={styles.mostSearchedText}>{item.title}</Text>
     </TouchableOpacity>
   );
 
-  const renderCard = ({ item }: { item: { id: string; title: string; location: string; status?: string } }) => (
+  const renderCard = ({
+    item,
+  }: {
+    item: {id: string; title: string; location: string; status?: string};
+  }) => (
     <View style={styles.cardContainer}>
       <Card title={item.title} location={item.location} status={item.status} />
     </View>
@@ -61,7 +68,7 @@ const Search = () => {
         <FlatList
           data={mostSearchedItems}
           renderItem={renderMostSearchedItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           numColumns={4}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.mostSearchedList}
@@ -72,13 +79,13 @@ const Search = () => {
       {/* Cards Grid */}
       <FlatList
         data={[
-          { id: '1', title: 'Charger', location: 'GK2-108', status: 'Found' },
-          { id: '2', title: 'Charger', location: 'GK2-108', status: 'Lost' },
-          { id: '3', title: 'Charger', location: 'GK2-108', status: 'Found' },
-          { id: '4', title: 'Charger', location: 'GK2-108', status: 'Lost' },
+          {id: '1', title: 'Charger', location: 'GK2-108', status: 'Found'},
+          {id: '2', title: 'Charger', location: 'GK2-108', status: 'Lost'},
+          {id: '3', title: 'Charger', location: 'GK2-108', status: 'Found'},
+          {id: '4', title: 'Charger', location: 'GK2-108', status: 'Lost'},
         ]}
         renderItem={renderCard}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         numColumns={2}
         columnWrapperStyle={styles.cardRow}
         contentContainerStyle={styles.cardsContainer}

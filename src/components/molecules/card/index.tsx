@@ -1,6 +1,7 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Location} from '../../../assets';
+import {useNavigation} from '@react-navigation/native';
 
 interface CardProps {
   title?: string;
@@ -17,34 +18,39 @@ const Card: React.FC<CardProps> = ({
   image,
   date = 'Oct 2, 2018',
 }) => {
+  const navigation = useNavigation(); // Gunakan hook ini
   return (
-    <View style={styles.container}>
-      <Image 
-        source={image ? {uri: image} : require('../../../assets/NoPhoto.jpg')} 
-        style={styles.pic} 
-      />
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.locationContainer}>
-          <Location width={12} height={12} fill="#666" />
-          <Text style={styles.locationText}>{location}</Text>
+    <TouchableOpacity onPress={() => navigation.navigate('ItemDetails')}>
+      <View style={styles.container}>
+        <Image
+          source={image ? {uri: image} : require('../../../assets/NoPhoto.jpg')}
+          style={styles.pic}
+        />
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>{title}</Text>
+          <View style={styles.locationContainer}>
+            <Location width={12} height={12} fill="#666" />
+            <Text style={styles.locationText}>{location}</Text>
+          </View>
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}>{date}</Text>
+          </View>
         </View>
-        <View style={styles.dateContainer}>
-          <Text style={styles.dateText}>{date}</Text>
+        <View
+          style={[
+            styles.statusContainer,
+            {backgroundColor: status === 'Found' ? '#B4FFB1' : '#FFC4C5'},
+          ]}>
+          <Text
+            style={[
+              styles.statusText,
+              {color: status === 'Found' ? '#2B6000' : '#600003'},
+            ]}>
+            {status}
+          </Text>
         </View>
       </View>
-      <View style={[
-        styles.statusContainer,
-        {backgroundColor: status === 'Found' ? '#B4FFB1' : '#FFC4C5'},
-      ]}>
-        <Text style={[
-          styles.statusText,
-          {color: status === 'Found' ? '#2B6000' : '#600003'},
-        ]}>
-          {status}
-        </Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

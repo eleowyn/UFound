@@ -6,9 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import Card from '../../components/molecules/card';
-import {AddItemsIcon, BrowseIcon, NotificationIcon} from '../../assets/index';
-import BottomTabs from '../../components/molecules/Tabs';
+import {Card, BottomTabs} from '../../components/index';
+import {AddItemsIcon, BrowseIcon} from '../../assets/index';
 
 import {NavigationProp} from '@react-navigation/native';
 
@@ -29,9 +28,6 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
               Find your items and help people find it too!
             </Text>
           </View>
-          <TouchableOpacity>
-            <NotificationIcon width={29} height={29} />
-          </TouchableOpacity>
         </View>
 
         <View style={styles.buttonRow}>
@@ -54,15 +50,44 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
 
         <View style={styles.cardContainer}>
           <View style={styles.cardGrid}>
-            <Card title="Charger" location="GK2-108" status="Found" date="Oct 2, 2018" />
-            <Card title="Charger" location="GK2-108" status="Lost" date="Oct 2, 2018" />
-            <Card title="Charger" location="GK2-108" status="Found" date="Oct 2, 2018" />
-            <Card title="Charger" location="GK2-108" status="Lost" date="Oct 2, 2018" />
-            <Card title="Charger" location="GK2-108" status="Found" date="Oct 2, 2018" />
-            <Card title="Charger" location="GK2-108" status="Lost" date="Oct 2, 2018" />
+            <Card
+              title="Charger"
+              location="GK2-108"
+              status="Found"
+              date="Oct 2, 2018"
+            />
+            <Card
+              title="Charger"
+              location="GK2-108"
+              status="Lost"
+              date="Oct 2, 2018"
+            />
+            <Card
+              title="Charger"
+              location="GK2-108"
+              status="Found"
+              date="Oct 2, 2018"
+            />
+            <Card
+              title="Charger"
+              location="GK2-108"
+              status="Lost"
+              date="Oct 2, 2018"
+            />
+            <Card
+              title="Charger"
+              location="GK2-108"
+              status="Found"
+              date="Oct 2, 2018"
+            />
+            <Card
+              title="Charger"
+              location="GK2-108"
+              status="Lost"
+              date="Oct 2, 2018"
+            />
           </View>
         </View>
-
       </ScrollView>
 
       <BottomTabs navigation={navigation} activeIndex={0} />

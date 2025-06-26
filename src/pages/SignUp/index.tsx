@@ -1,12 +1,23 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import Header from '../../components/molecules/header';
-import {Button, Gap} from '../../components';
-import Logosignup from '../../assets/signup_pic';
-import TextInput from '../../components/atoms/textInput';
-import Checkbox from '../../components/atoms/Checkbox';
-import Loading from '../../components/molecules/Loading';
 import {showMessage} from 'react-native-flash-message';
+import Logosignup from '../../assets/signup_pic';
+
+import {
+  Header,
+  Button,
+  Gap,
+  textInput as TextInput,
+  Checkbox,
+  Loading,
+} from '../../components/index';
+
+// import Header from '../../components/molecules/header';
+// import {Button, Gap} from '../../components';
+// import TextInput from '../../components/atoms/textInput';
+// import Checkbox from '../../components/atoms/Checkbox';
+// import Loading from '../../components/molecules/Loading';
+
 const SignUp = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
