@@ -17,11 +17,11 @@ interface BottomTabsProps {
 }
 
 const tabs = [
-  {label: 'Home', icon: HomeIcon},
-  {label: 'Search', icon: SearchIcon},
-  {label: 'Add', icon: AddIcon},
-  {label: 'Activity', icon: ActivityIcon},
-  {label: 'More', icon: MoreIcon},
+  {label: 'Home', icon: HomeIcon, size: 26},
+  {label: 'Search', icon: SearchIcon, size: 33},
+  {label: 'Add', icon: AddIcon, size: 33},
+  {label: 'Activity', icon: ActivityIcon, size: 25},
+  {label: 'More', icon: MoreIcon, size: 33},
 ];
 
 const BottomTabs: React.FC<BottomTabsProps> = ({
@@ -58,38 +58,19 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
         const Icon = tab.icon;
         const isActive = index === activeIndex;
 
-        // Add error handling for undefined icons
-        if (!Icon) {
-          console.warn(`Icon for ${tab.label} is undefined`);
-          return (
-            <TouchableOpacity
-              key={index}
-              style={styles.tab}
-              onPress={() => handleTabPress(index)}>
-              <View
-                style={[
-                  styles.placeholder,
-                  isActive && styles.activePlaceholder,
-                ]}
-              />
-              <Text style={[styles.label, isActive && styles.activeLabel]}>
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          );
-        }
-
         return (
           <TouchableOpacity
             key={index}
-            style={styles.tab}
+            style={[styles.tab, index === 2 && styles.middleTab]}
             onPress={() => handleTabPress(index)}>
-            <Icon
-              width={24}
-              height={24}
-              fill={isActive ? '#000' : '#666'}
-              color={isActive ? '#000' : '#666'} // fallback prop
-            />
+            <View style={styles.iconWrapper}>
+              <Icon
+                width={tab.size}
+                height={tab.size}
+                fill={isActive ? '#000' : '#666'}
+                color={isActive ? '#000' : '#666'}
+              />
+            </View>
             <Text style={[styles.label, isActive && styles.activeLabel]}>
               {tab.label}
             </Text>
@@ -112,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#fff',
     paddingVertical: 12,
-    paddingBottom: 20, // Account for safe area
+    paddingBottom: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 8,
@@ -129,6 +110,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 4,
   },
+  iconWrapper: {
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   label: {
     marginTop: 4,
     fontSize: 10,
@@ -138,14 +124,5 @@ const styles = StyleSheet.create({
   activeLabel: {
     color: '#000',
     fontFamily: 'Poppins-SemiBold',
-  },
-  placeholder: {
-    width: 24,
-    height: 24,
-    backgroundColor: '#ddd',
-    borderRadius: 4,
-  },
-  activePlaceholder: {
-    backgroundColor: '#000',
   },
 });
