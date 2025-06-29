@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 
-const Checkbox = ({ label }) => {
-  const [checked, setChecked] = useState(false);
-
+const Checkbox = ({label, value, onValueChange}) => {
   return (
     <TouchableOpacity
       style={styles.checkboxContainer}
-      onPress={() => setChecked(!checked)}
-    >
+      onPress={() => onValueChange(!value)}>
       <View style={styles.box}>
-        {checked && <View style={styles.innerBox} />}
+        {value && <View style={styles.innerBox} />}
       </View>
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>

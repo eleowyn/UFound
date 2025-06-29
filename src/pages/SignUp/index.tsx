@@ -12,16 +12,21 @@ import {
   Loading,
 } from '../../components/index';
 
-// import Header from '../../components/molecules/header';
-// import {Button, Gap} from '../../components';
-// import TextInput from '../../components/atoms/textInput';
-// import Checkbox from '../../components/atoms/Checkbox';
-// import Loading from '../../components/molecules/Loading';
-
 const SignUp = ({navigation}) => {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [agree, setAgree] = useState(false);
 
   const handleSignUp = () => {
+    if (!email || !password || !agree) {
+      showMessage({
+        message: 'Please complete all fields and agree to the terms!',
+        type: 'danger',
+      });
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -46,14 +51,23 @@ const SignUp = ({navigation}) => {
           <TextInput
             text="Your Email Address"
             placeholder="Enter your email address"
+            value={email}
+            onChangeText={setEmail}
           />
           <Gap height={16} />
           <TextInput
             text="Create a Password"
             placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
           />
-          <Checkbox label="I agree with terms of use" />
           <Gap height={10} />
+          <Checkbox
+            label="I agree with terms of use"
+            value={agree}
+            onValueChange={setAgree}
+          />
+          <Gap height={20} />
           <Button text="Sign Up" onPress={handleSignUp} />
           <Gap height={12} />
           <View style={styles.signupWrapper}>
@@ -86,15 +100,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 2,
     marginBottom: 12,
-  },
-  checkbox: {
-    marginLeft: 13,
-  },
-  forgotLabel: {
-    textAlign: 'right',
-    fontFamily: 'Poppins-Medium',
-    color: '#6D6D6D',
-    fontSize: 11,
   },
   signupWrapper: {
     alignItems: 'center',

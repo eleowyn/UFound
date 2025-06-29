@@ -13,24 +13,35 @@ import {
   Loading,
 } from '../../components/index';
 
-// import TextInput from '../../components/atoms/textInput';
-// import Checkbox from '../../components/atoms/Checkbox';
-// import BottomTabs from '../../components/molecules/Tabs';
-// import Loading from '../../components/molecules/Loading';
-
 const Login = ({navigation}) => {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false); // ✅ Tambah state
 
   const handleLogin = () => {
+    if (!email || !password) {
+      showMessage({
+        message: 'Please enter your email and password!',
+        type: 'danger',
+      });
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       showMessage({
-        message: 'Login successfull!',
+        message: rememberMe
+          ? 'Login successful! (Remembered ✅)'
+          : 'Login successful!',
         type: 'success',
       });
+
+      // 🧠 Kalau mau simpan status "remember me" ke storage, bisa pakai AsyncStorage di sini
+
       navigation.replace('Dashboard');
-    }, 3000);
+    }, 2000);
   };
 
   return (
@@ -43,10 +54,21 @@ const Login = ({navigation}) => {
           <TextInput
             text="Email Address"
             placeholder="Enter your email address"
+            value={email}
+            onChangeText={setEmail}
           />
           <Gap height={16} />
-          <TextInput text="Password" placeholder="Enter your password" />
-          <Checkbox label="Remember me" />
+          <TextInput
+            text="Password"
+            placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
+          />
+          <Checkbox
+            label="Remember me"
+            value={rememberMe}
+            onValueChange={setRememberMe}
+          />
           <Text style={styles.forgotLabel}>Forgot Password?</Text>
           <Gap height={10} />
           <Button text="Log In" onPress={handleLogin} />

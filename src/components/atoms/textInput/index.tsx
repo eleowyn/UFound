@@ -1,14 +1,28 @@
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import {StyleSheet, View, Text, TextInput as RNTextInput} from 'react-native';
 import React from 'react';
 
-const textInput = ({ text, placeholder }) => {
+interface Props {
+  text: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+}
+
+const textInput: React.FC<Props> = ({
+  text,
+  placeholder,
+  value,
+  onChangeText,
+}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{text}</Text>
-      <TextInput
+      <RNTextInput
         placeholder={placeholder}
         placeholderTextColor="#A0A0A0"
         style={styles.input}
+        value={value}
+        onChangeText={onChangeText}
       />
     </View>
   );
@@ -30,7 +44,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 60,
-    width: 348,
+    width: '100%',
     borderWidth: 1,
     borderColor: '#CFCFCF',
     borderRadius: 12,
