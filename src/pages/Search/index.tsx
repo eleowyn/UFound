@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,43 +6,119 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {getDatabase, ref, onValue} from 'firebase/database';
+import app from '../../config/Firebase';
 import {SearchIcon} from '../../assets/index';
 import {BottomTabs, Card} from '../../components/index';
 
+interface ItemData {
+  id: string;
+  itemName: string;
+  location: string;
+  postType: 'Found' | 'Lost';
+  date: string;
+  imageBase64?: string;
+  description: string;
+  contact: string;
+  createdBy: string;
+  createdAt: number;
+}
+
 const mostSearchedItems = [
-  {id: '1', title: 'ID CARD', location: 'ID CARD'},
-  {id: '2', title: 'ID CARD', location: 'ID CARD'},
-  {id: '3', title: 'ID CARD', location: 'ID CARD'},
-  {id: '4', title: 'ID CARD', location: 'ID CARD'},
-  {id: '5', title: 'ID CARD', location: 'ID CARD'},
-  {id: '6', title: 'ID CARD', location: 'ID CARD'},
-  {id: '7', title: 'ID CARD', location: 'ID CARD'},
-  {id: '8', title: 'ID CARD', location: 'ID CARD'},
+  {id: '1', title: 'ID CARD'},
+  {id: '2', title: 'WALLET'},
+  {id: '3', title: 'PHONE'},
+  {id: '4', title: 'KEYS'},
+  {id: '5', title: 'LAPTOP'},
+  {id: '6', title: 'CHARGER'},
+  {id: '7', title: 'BOOK'},
+  {id: '8', title: 'BAG'},
 ];
 
 const Search = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<any>>();
   const [searchText, setSearchText] = useState('');
+  const [allItems, setAllItems] = useState<ItemData[]>([]);
+  const [filteredItems, setFilteredItems] = useState<ItemData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const db = getDatabase(app);
+    const itemsRef = ref(db, 'items');
+
+    const unsubscribe = onValue(itemsRef, snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        const itemsArray: ItemData[] = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key],
+        }));
+        // Sort by creation time (newest first)
+        itemsArray.sort((a, b) => b.createdAt - a.createdAt);
+        setAllItems(itemsArray);
+        setFilteredItems(itemsArray);
+      } else {
+        setAllItems([]);
+        setFilteredItems([]);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (searchText.trim() === '') {
+      setFilteredItems(allItems);
+    } else {
+      const filtered = allItems.filter(item =>
+        item.itemName.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.location.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    }
+  }, [searchText, allItems]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
+  const handleMostSearchedPress = (searchTerm: string) => {
+    setSearchText(searchTerm);
+  };
 
   const renderMostSearchedItem = ({
     item,
   }: {
-    item: {id: string; title: string; location: string};
+    item: {id: string; title: string};
   }) => (
-    <TouchableOpacity style={styles.mostSearchedItem}>
+    <TouchableOpacity 
+      style={styles.mostSearchedItem}
+      onPress={() => handleMostSearchedPress(item.title)}
+    >
       <Text style={styles.mostSearchedText}>{item.title}</Text>
     </TouchableOpacity>
   );
 
-  const renderCard = ({
-    item,
-  }: {
-    item: {id: string; title: string; location: string; status?: string};
-  }) => (
+  const renderCard = ({item}: {item: ItemData}) => (
     <View style={styles.cardContainer}>
-      <Card title={item.title} location={item.location} status={item.status} />
+      <Card 
+        title={item.itemName} 
+        location={item.location} 
+        status={item.postType}
+        date={formatDate(item.date)}
+        image={item.imageBase64}
+        onPress={() => navigation.navigate('ItemDetails', { item })}
+      />
     </View>
   );
 
@@ -76,21 +152,38 @@ const Search = () => {
         />
       </View>
 
-      {/* Cards Grid */}
-      <FlatList
-        data={[
-          {id: '1', title: 'Charger', location: 'GK2-108', status: 'Found'},
-          {id: '2', title: 'Charger', location: 'GK2-108', status: 'Lost'},
-          {id: '3', title: 'Charger', location: 'GK2-108', status: 'Found'},
-          {id: '4', title: 'Charger', location: 'GK2-108', status: 'Lost'},
-        ]}
-        renderItem={renderCard}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        columnWrapperStyle={styles.cardRow}
-        contentContainerStyle={styles.cardsContainer}
-        showsVerticalScrollIndicator={false}
-      />
+      {/* Search Results */}
+      <View style={styles.resultsContainer}>
+        <Text style={styles.resultsTitle}>
+          {searchText ? `Search Results (${filteredItems.length})` : `All Items (${filteredItems.length})`}
+        </Text>
+        
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Loading items...</Text>
+          </View>
+        ) : filteredItems.length > 0 ? (
+          <FlatList
+            data={filteredItems}
+            renderItem={renderCard}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            columnWrapperStyle={styles.cardRow}
+            contentContainerStyle={styles.cardsContainer}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+              {searchText ? 'No items found matching your search' : 'No items available'}
+            </Text>
+            <Text style={styles.emptySubText}>
+              {searchText ? 'Try searching with different keywords' : 'Items will appear here when added'}
+            </Text>
+          </View>
+        )}
+      </View>
 
       {/* Bottom Tabs */}
       <BottomTabs navigation={navigation} activeIndex={1} />
@@ -162,8 +255,48 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
+  resultsContainer: {
+    flex: 1,
+    marginHorizontal: 16,
+  },
+  resultsTitle: {
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'Poppins-Regular',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
+    color: '#333',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptySubText: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: '#666',
+    textAlign: 'center',
+  },
   cardsContainer: {
-    paddingHorizontal: 16,
     paddingBottom: 100, // Account for bottom tabs
   },
   cardRow: {

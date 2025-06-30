@@ -1,15 +1,33 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 
-const Checkbox = ({label, value, onValueChange}) => {
+interface CheckboxProps {
+  label?: string;
+  value?: boolean;
+  onValueChange?: (value: boolean) => void;
+  checked?: boolean;
+}
+
+const Checkbox: React.FC<CheckboxProps> = ({
+  label,
+  value,
+  onValueChange,
+  checked = false,
+}) => {
+  const handlePress = () => {
+    if (onValueChange) {
+      onValueChange(!(value || checked));
+    }
+  };
+
   return (
     <TouchableOpacity
       style={styles.checkboxContainer}
-      onPress={() => onValueChange(!value)}>
+      onPress={handlePress}>
       <View style={styles.box}>
-        {value && <View style={styles.innerBox} />}
+        {(value || checked) && <View style={styles.innerBox} />}
       </View>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
     </TouchableOpacity>
   );
 };
