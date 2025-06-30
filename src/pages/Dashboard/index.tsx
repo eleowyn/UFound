@@ -242,7 +242,7 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
         contentContainerStyle={{paddingBottom: 100}}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Hey, {userName}</Text>
+            <Text style={styles.greeting}>Hi, {userName}</Text>
             <Text style={styles.subText}>
               Find your items and help people find it too!
             </Text>
