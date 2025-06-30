@@ -113,5 +113,8 @@ const styles = StyleSheet.create({
   signupLink: {
     fontFamily: 'Poppins-SemiBold',
     color: '#000',
+    fontSize: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
