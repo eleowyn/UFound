@@ -9,7 +9,40 @@ import React from 'react';
 import {BackIcon} from '../../assets';
 import {Bigcard, BottomTabs} from '../../components';
 
-const ItemDetails = ({navigation}) => {
+interface ItemData {
+  id: string;
+  itemName: string;
+  location: string;
+  postType: 'Found' | 'Lost';
+  date: string;
+  imageBase64?: string;
+  description: string;
+  contact: string;
+  createdBy: string;
+  createdAt: number;
+}
+
+interface ItemDetailsProps {
+  navigation: any;
+  route: {
+    params: {
+      item: ItemData;
+    };
+  };
+}
+
+const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
+  const item = route?.params?.item;
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
   return (
     <View style={styles.page}>
       <ScrollView
@@ -22,7 +55,16 @@ const ItemDetails = ({navigation}) => {
           <Text style={styles.text}>Item Details</Text>
         </View>
 
-        <Bigcard />
+        <Bigcard
+          title={item?.itemName || 'Unknown Item'}
+          createdby={item?.contact || 'Unknown'}
+          date={item ? formatDate(item.date) : 'Unknown Date'}
+          location={item?.location || 'Unknown Location'}
+          contact={item?.contact || 'No contact info'}
+          description={item?.description || 'No description available'}
+          imageBase64={item?.imageBase64}
+          status={item?.postType || 'Found'}
+        />
       </ScrollView>
 
       <BottomTabs navigation={navigation} activeIndex={0} />

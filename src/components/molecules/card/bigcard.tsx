@@ -1,24 +1,39 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
-import NoPhoto from '../../../assets/NoPhoto.jpg';
 import {Foundlabel, Lostlabel} from '../../../components';
 
-const Bigcard = ({
+interface BigcardProps {
+  title?: string;
+  createdby?: string;
+  date?: string;
+  location?: string;
+  contact?: string;
+  description?: string;
+  imageBase64?: string;
+  status?: 'Found' | 'Lost';
+}
+
+const Bigcard: React.FC<BigcardProps> = ({
   title = 'Lost Item',
   createdby = 'Created By',
   date = 'Date',
   location = 'Location',
   contact = 'Contact',
   description = 'Description',
+  imageBase64,
+  status = 'Found',
 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Image source={NoPhoto} style={styles.photo} />
+        <Image 
+          source={imageBase64 ? {uri: imageBase64} : require('../../../assets/NoPhoto.jpg')} 
+          style={styles.photo}
+        />
         <View style={styles.detail}>
           <View style={styles.top}>
             <Text style={styles.title}>{title}</Text>
-            <Foundlabel />
+            {status === 'Found' ? <Foundlabel /> : <Lostlabel />}
           </View>
           <View style={styles.bottom}>
             <View style={styles.bottomright}>

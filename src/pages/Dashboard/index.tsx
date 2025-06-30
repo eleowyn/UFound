@@ -188,6 +188,7 @@ import {AddItemsIcon, BrowseIcon} from '../../assets/index';
 import {NavigationProp} from '@react-navigation/native';
 import {getAuth} from 'firebase/auth';
 import {getDatabase, ref, onValue} from 'firebase/database';
+import app from '../../config/Firebase';
 
 interface DashboardProps {
   navigation: NavigationProp<any>;
@@ -198,16 +199,31 @@ interface UserData {
   email?: string;
 }
 
+interface ItemData {
+  id: string;
+  itemName: string;
+  location: string;
+  postType: 'Found' | 'Lost';
+  date: string;
+  imageBase64?: string;
+  description: string;
+  contact: string;
+  createdBy: string;
+  createdAt: number;
+}
+
 const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
   const [userName, setUserName] = useState('User');
   const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<ItemData[]>([]);
+  const [itemsLoading, setItemsLoading] = useState(true);
 
   useEffect(() => {
-    const auth = getAuth();
+    const auth = getAuth(app);
     const user = auth.currentUser;
 
     if (user) {
-      const db = getDatabase();
+      const db = getDatabase(app);
       const userRef = ref(db, 'users/' + user.uid);
 
       const unsubscribe = onValue(userRef, snapshot => {
@@ -226,6 +242,38 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
       setUserName('User');
     }
   }, []);
+
+  useEffect(() => {
+    const db = getDatabase(app);
+    const itemsRef = ref(db, 'items');
+
+    const unsubscribe = onValue(itemsRef, snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        const itemsArray: ItemData[] = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key],
+        }));
+        // Sort by creation time (newest first)
+        itemsArray.sort((a, b) => b.createdAt - a.createdAt);
+        setItems(itemsArray);
+      } else {
+        setItems([]);
+      }
+      setItemsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
 
   if (loading) {
     return (
@@ -268,44 +316,33 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
         </View>
 
         <View style={styles.cardContainer}>
-          <View style={styles.cardGrid}>
-            <Card
-              title="Charger"
-              location="GK2-108"
-              status="Found"
-              date="Oct 2, 2018"
-            />
-            <Card
-              title="Charger"
-              location="GK2-108"
-              status="Lost"
-              date="Oct 2, 2018"
-            />
-            <Card
-              title="Charger"
-              location="GK2-108"
-              status="Found"
-              date="Oct 2, 2018"
-            />
-            <Card
-              title="Charger"
-              location="GK2-108"
-              status="Lost"
-              date="Oct 2, 2018"
-            />
-            <Card
-              title="Charger"
-              location="GK2-108"
-              status="Found"
-              date="Oct 2, 2018"
-            />
-            <Card
-              title="Charger"
-              location="GK2-108"
-              status="Lost"
-              date="Oct 2, 2018"
-            />
-          </View>
+          {itemsLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#0000ff" />
+              <Text style={styles.loadingText}>Loading items...</Text>
+            </View>
+          ) : items.length > 0 ? (
+            <View style={styles.cardGrid}>
+              {items.map(item => (
+                <Card
+                  key={item.id}
+                  title={item.itemName}
+                  location={item.location}
+                  status={item.postType}
+                  date={formatDate(item.date)}
+                  image={item.imageBase64}
+                  onPress={() => navigation.navigate('ItemDetails', { item })}
+                />
+              ))}
+            </View>
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No items found</Text>
+              <Text style={styles.emptySubText}>
+                Start by adding your first item!
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
@@ -392,5 +429,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'Poppins-Regular',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
+    color: '#333',
+    marginBottom: 8,
+  },
+  emptySubText: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: '#666',
+    textAlign: 'center',
   },
 });

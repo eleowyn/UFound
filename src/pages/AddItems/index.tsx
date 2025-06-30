@@ -3,6 +3,9 @@ import {StyleSheet, Text, View, ScrollView, Alert} from 'react-native';
 
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {getAuth} from 'firebase/auth';
+import {getDatabase, ref, push, set} from 'firebase/database';
+import app from '../../config/Firebase';
 import {
   Loading,
   Header,
@@ -115,8 +118,101 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
     );
   };
 
-  const handlePost = () => {
+  const convertImageToBase64 = async (imageUri: string): Promise<string | null> => {
+    try {
+      console.log('Converting image to base64...');
+      const response = await fetch(imageUri);
+      if (!response.ok) {
+        throw new Error('Failed to fetch image');
+      }
+      const blob = await response.blob();
+      
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = reader.result as string;
+          console.log('Image converted to base64 successfully');
+          resolve(base64String);
+        };
+        reader.onerror = () => {
+          console.error('Error converting image to base64');
+          reject(new Error('Failed to convert image to base64'));
+        };
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error('Error converting image to base64:', error);
+      showMessage({
+        message: 'Failed to process image. Saving item without image.',
+        type: 'warning',
+      });
+      return null;
+    }
+  };
+
+  const saveItemToFirebase = async () => {
+    try {
+      const auth = getAuth(app);
+      const user = auth.currentUser;
+      
+      if (!user) {
+        showMessage({
+          message: 'Please login to add items',
+          type: 'danger',
+        });
+        return false;
+      }
+
+      console.log('Saving item to Firebase...');
+      const db = getDatabase(app);
+      const itemsRef = ref(db, 'items');
+      const newItemRef = push(itemsRef);
+
+      let imageBase64 = null;
+      if (selectedImage?.uri) {
+        console.log('Processing image...');
+        try {
+          imageBase64 = await convertImageToBase64(selectedImage.uri);
+          console.log('Image processed successfully');
+        } catch (imageError) {
+          console.error('Image processing failed, continuing without image:', imageError);
+          showMessage({
+            message: 'Image processing failed, saving item without image',
+            type: 'warning',
+          });
+        }
+      }
+
+      const itemData = {
+        id: newItemRef.key,
+        itemName,
+        location,
+        contact,
+        description,
+        postType: selectedPostType,
+        date: date.toISOString(),
+        imageBase64,
+        createdBy: user.uid,
+        createdAt: Date.now(),
+      };
+
+      console.log('Saving item data:', itemData);
+      await set(newItemRef, itemData);
+      console.log('Item saved successfully');
+      return true;
+    } catch (error) {
+      console.error('Error saving item:', error);
+      showMessage({
+        message: 'Failed to save item. Please try again.',
+        type: 'danger',
+      });
+      return false;
+    }
+  };
+
+  const handlePost = async () => {
     setLoading(true);
+    
     if (!itemName || !location || !contact || !description) {
       showMessage({
         message: 'Please fill all required fields',
@@ -126,15 +222,27 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
       return;
     }
 
-    // Simulate API call with timeout
-    setTimeout(() => {
-      setLoading(false);
+    const success = await saveItemToFirebase();
+    
+    setLoading(false);
+    
+    if (success) {
       showMessage({
         message: 'Item posted successfully!',
         type: 'success',
       });
+      
+      // Reset form
+      setItemName('');
+      setLocation('');
+      setContact('');
+      setDescription('');
+      setSelectedImage(null);
+      setDate(new Date());
+      setSelectedPostType('Found');
+      
       navigation.goBack();
-    }, 2000);
+    }
   };
 
   return (

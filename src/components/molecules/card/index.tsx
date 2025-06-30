@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Location} from '../../../assets';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 
 interface CardProps {
   title?: string;
@@ -9,6 +9,7 @@ interface CardProps {
   status?: string;
   image?: string;
   date?: string;
+  onPress?: () => void;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -17,10 +18,20 @@ const Card: React.FC<CardProps> = ({
   status = 'Found',
   image,
   date = 'Oct 2, 2018',
+  onPress,
 }) => {
-  const navigation = useNavigation(); // Gunakan hook ini
+  const navigation = useNavigation<NavigationProp<any>>();
+  
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else {
+      navigation.navigate('ItemDetails' as never);
+    }
+  };
+  
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('ItemDetails')}>
+    <TouchableOpacity onPress={handlePress}>
       <View style={styles.container}>
         <Image
           source={image ? {uri: image} : require('../../../assets/NoPhoto.jpg')}
