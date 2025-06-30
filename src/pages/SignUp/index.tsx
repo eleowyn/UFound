@@ -118,11 +118,18 @@
 //     alignItems: 'center',
 //   },
 // });
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from 'react-native';
 import React, {useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import Logosignup from '../../assets/signup_pic';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+import {getDatabase, ref, set} from 'firebase/database';
 
 import {
   Header,
@@ -137,12 +144,13 @@ const SignUp = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [nama, setNama] = useState('');
   const [agree, setAgree] = useState(false);
 
   const handleSignUp = async () => {
-    if (!email || !password) {
+    if (!email || !password || !nama) {
       showMessage({
-        message: 'Please enter your email and password!',
+        message: 'Please complete all fields!',
         type: 'danger',
       });
       return;
@@ -158,23 +166,31 @@ const SignUp = ({navigation}) => {
 
     setLoading(true);
     const auth = getAuth();
+    const db = getDatabase();
 
     try {
+      // 1. Buat akun di Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
       );
 
+      const user = userCredential.user;
+
+      // 2. Simpan data tambahan ke Realtime Database
+      await set(ref(db, 'users/' + user.uid), {
+        nama: nama,
+        email: email,
+        createdAt: new Date().toISOString(), // Opsional: tambahkan timestamp
+      });
+
       showMessage({
         message: 'Account created successfully!',
         type: 'success',
       });
 
-      // Navigasi ke Login setelah sign up berhasil
-      navigation.replace('Login', {
-        email: email, // Mengirim email untuk pre-fill di halaman login
-      });
+      navigation.replace('Login', {email: email});
     } catch (error) {
       let errorMessage = 'Registration failed';
       switch (error.code) {
@@ -186,9 +202,6 @@ const SignUp = ({navigation}) => {
           break;
         case 'auth/weak-password':
           errorMessage = 'Password should be at least 6 characters';
-          break;
-        case 'auth/operation-not-allowed':
-          errorMessage = 'Email/password accounts are not enabled';
           break;
         default:
           errorMessage = error.message;
@@ -205,7 +218,7 @@ const SignUp = ({navigation}) => {
 
   return (
     <>
-      <View style={styles.pageContainer}>
+      <ScrollView style={styles.pageContainer}>
         <Header
           title="Let's Get Started!"
           subTitle="Fill the form to continue"
@@ -213,6 +226,13 @@ const SignUp = ({navigation}) => {
         <Logosignup width={210} height={210} style={styles.signupPic} />
         <View style={styles.contentContainer}>
           <Gap height={2} />
+          <TextInput
+            text="Your Full Name"
+            placeholder="Enter your full name"
+            value={nama}
+            onChangeText={setNama}
+          />
+          <Gap height={16} />
           <TextInput
             text="Your Email Address"
             placeholder="Enter your email address"
@@ -247,7 +267,7 @@ const SignUp = ({navigation}) => {
             </Text>
           </View>
         </View>
-      </View>
+      </ScrollView>
       {loading && <Loading />}
     </>
   );
@@ -258,6 +278,7 @@ export default SignUp;
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
+    marginBottom: 50,
   },
   contentContainer: {
     flex: 1,
