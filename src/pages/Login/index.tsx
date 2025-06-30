@@ -238,12 +238,10 @@ const Login = ({navigation}) => {
           <Button text="Log In" onPress={handleLogin} />
           <Gap height={12} />
           <View style={styles.signupWrapper}>
-            <Text style={styles.signupText}>
-              Don't have an account?{' '}
-              <TouchableOpacity onPress={() => navigation.replace('SignUp')}>
-                <Text style={styles.signupLink}>Sign Up</Text>
-              </TouchableOpacity>
-            </Text>
+            <Text style={styles.signupText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.replace('SignUp')}>
+              <Text style={styles.signupLink}>Sign Up</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -278,6 +276,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   signupWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 12,
   },
