@@ -261,7 +261,7 @@ const SignUp = ({navigation}) => {
             placeholder="Enter your password (min. 6 characters)"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={true}
           />
           <Gap height={16} />
           <TextInput

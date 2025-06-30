@@ -13,6 +13,7 @@ const textInput: React.FC<Props> = ({
   placeholder,
   value,
   onChangeText,
+  secureTextEntry,
 }) => {
   return (
     <View style={styles.container}>
@@ -23,6 +24,7 @@ const textInput: React.FC<Props> = ({
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
       />
     </View>
   );
