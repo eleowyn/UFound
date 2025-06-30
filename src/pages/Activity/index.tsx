@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {getAuth} from 'firebase/auth';
-import {getDatabase, ref, onValue, query, orderByChild, equalTo} from 'firebase/database';
+import {getDatabase, ref, onValue, query, orderByChild, equalTo, update} from 'firebase/database';
 import {NavigationProp} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
 import app from '../../config/Firebase';
 import {ArrowLeftIcon} from '../../assets/index';
 import {Checkbox, BottomTabs, Card} from '../../components/index';
@@ -25,6 +26,7 @@ interface ItemData {
   contact: string;
   createdBy: string;
   createdAt: number;
+  completed?: boolean;
 }
 
 interface ActivityProps {
@@ -55,6 +57,15 @@ const Activity: React.FC<ActivityProps> = ({navigation}) => {
           // Sort by creation time (newest first)
           itemsArray.sort((a, b) => b.createdAt - a.createdAt);
           setUserPosts(itemsArray);
+          
+          // Set completed items state from Firebase data
+          const completedState: {[key: string]: boolean} = {};
+          itemsArray.forEach(item => {
+            if (item.completed) {
+              completedState[item.id] = true;
+            }
+          });
+          setCompletedItems(completedState);
         } else {
           setUserPosts([]);
         }
@@ -90,11 +101,34 @@ const Activity: React.FC<ActivityProps> = ({navigation}) => {
     });
   };
 
-  const toggleItemCompletion = (itemId: string) => {
-    setCompletedItems(prev => ({
-      ...prev,
-      [itemId]: !prev[itemId]
-    }));
+  const toggleItemCompletion = async (itemId: string) => {
+    try {
+      const db = getDatabase(app);
+      const itemRef = ref(db, `items/${itemId}`);
+      const newCompletedStatus = !completedItems[itemId];
+      
+      // Update only the completed field in Firebase
+      await update(itemRef, {
+        completed: newCompletedStatus
+      });
+
+      // Update local state
+      setCompletedItems(prev => ({
+        ...prev,
+        [itemId]: newCompletedStatus
+      }));
+
+      showMessage({
+        message: newCompletedStatus ? 'Item marked as completed!' : 'Item marked as active',
+        type: 'success',
+      });
+    } catch (error) {
+      console.error('Error updating item completion status:', error);
+      showMessage({
+        message: 'Failed to update item status',
+        type: 'danger',
+      });
+    }
   };
 
   return (

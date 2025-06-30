@@ -10,6 +10,7 @@ interface CardProps {
   image?: string;
   date?: string;
   onPress?: () => void;
+  completed?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -19,6 +20,7 @@ const Card: React.FC<CardProps> = ({
   image,
   date = 'Oct 2, 2018',
   onPress,
+  completed = false,
 }) => {
   const navigation = useNavigation<NavigationProp<any>>();
   
@@ -32,32 +34,37 @@ const Card: React.FC<CardProps> = ({
   
   return (
     <TouchableOpacity onPress={handlePress}>
-      <View style={styles.container}>
+      <View style={[styles.container, completed && styles.completedContainer]}>
         <Image
           source={image ? {uri: image} : require('../../../assets/NoPhoto.jpg')}
-          style={styles.pic}
+          style={[styles.pic, completed && styles.completedImage]}
         />
+        {completed && (
+          <View style={styles.completedOverlay}>
+            <Text style={styles.completedText}>COMPLETED</Text>
+          </View>
+        )}
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={[styles.title, completed && styles.completedTitle]}>{title}</Text>
           <View style={styles.locationContainer}>
             <Location width={12} height={12} fill="#666" />
-            <Text style={styles.locationText}>{location}</Text>
+            <Text style={[styles.locationText, completed && styles.completedLocationText]}>{location}</Text>
           </View>
           <View style={styles.dateContainer}>
-            <Text style={styles.dateText}>{date}</Text>
+            <Text style={[styles.dateText, completed && styles.completedDateText]}>{date}</Text>
           </View>
         </View>
         <View
           style={[
             styles.statusContainer,
-            {backgroundColor: status === 'Found' ? '#B4FFB1' : '#FFC4C5'},
+            {backgroundColor: completed ? '#E0E0E0' : (status === 'Found' ? '#B4FFB1' : '#FFC4C5')},
           ]}>
           <Text
             style={[
               styles.statusText,
-              {color: status === 'Found' ? '#2B6000' : '#600003'},
+              {color: completed ? '#666' : (status === 'Found' ? '#2B6000' : '#600003')},
             ]}>
-            {status}
+            {completed ? 'Done' : status}
           </Text>
         </View>
       </View>
@@ -126,5 +133,35 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
     fontFamily: 'Poppins-Medium',
+  },
+  completedContainer: {
+    opacity: 0.7,
+  },
+  completedImage: {
+    opacity: 0.5,
+  },
+  completedOverlay: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    zIndex: 1,
+  },
+  completedText: {
+    color: '#fff',
+    fontSize: 10,
+    fontFamily: 'Poppins-Bold',
+  },
+  completedTitle: {
+    color: '#999',
+  },
+  completedLocationText: {
+    color: '#999',
+  },
+  completedDateText: {
+    color: '#999',
   },
 });

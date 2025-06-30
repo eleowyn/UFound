@@ -210,6 +210,7 @@ interface ItemData {
   contact: string;
   createdBy: string;
   createdAt: number;
+  completed?: boolean;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
@@ -254,9 +255,10 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
           id: key,
           ...data[key],
         }));
-        // Sort by creation time (newest first)
-        itemsArray.sort((a, b) => b.createdAt - a.createdAt);
-        setItems(itemsArray);
+        // Filter out completed items and sort by creation time (newest first)
+        const activeItems = itemsArray.filter(item => !item.completed);
+        activeItems.sort((a, b) => b.createdAt - a.createdAt);
+        setItems(activeItems);
       } else {
         setItems([]);
       }

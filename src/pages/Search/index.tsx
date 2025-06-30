@@ -25,6 +25,7 @@ interface ItemData {
   contact: string;
   createdBy: string;
   createdAt: number;
+  completed?: boolean;
 }
 
 const mostSearchedItems = [
@@ -117,6 +118,7 @@ const Search = () => {
         status={item.postType}
         date={formatDate(item.date)}
         image={item.imageBase64}
+        completed={item.completed}
         onPress={() => navigation.navigate('ItemDetails', { item })}
       />
     </View>
