@@ -374,21 +374,26 @@ const Account = ({navigation}) => {
 
         <View style={styles.profileSection}>
           <View style={styles.profileRow}>
-            <TouchableOpacity onPress={onSelectImage} disabled={uploading}>
-              {userData?.foto ? (
-                <Image
-                  source={{uri: userData.foto}}
-                  style={styles.profileCircle}
-                />
-              ) : (
-                <View style={styles.profileCircle} />
-              )}
+            <View style={styles.profileTouchable}>
+              <TouchableOpacity
+                onPress={onSelectImage}
+                disabled={uploading}
+                style={styles.touchableContent}>
+                {userData?.foto ? (
+                  <Image
+                    source={{uri: userData.foto}}
+                    style={styles.profileCircle}
+                  />
+                ) : (
+                  <View style={styles.profileCircle} />
+                )}
+              </TouchableOpacity>
               {uploading && (
-                <View style={styles.uploadOverlay}>
+                <View style={styles.uploadOverlay} pointerEvents="none">
                   <ActivityIndicator color="#fff" />
                 </View>
               )}
-            </TouchableOpacity>
+            </View>
             <View style={styles.textColumn}>
               <Text style={styles.profileName}>
                 {userData?.nama || 'No Name'}
@@ -453,6 +458,18 @@ const styles = StyleSheet.create({
   profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  profileTouchable: {
+    position: 'relative',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    overflow: 'hidden',
+  },
+  touchableContent: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   profileCircle: {
     width: 80,
