@@ -1,7 +1,128 @@
+// import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+// import React, {useState} from 'react';
+// import {showMessage} from 'react-native-flash-message';
+// import Logosignup from '../../assets/signup_pic';
+
+// import {
+//   Header,
+//   Button,
+//   Gap,
+//   textInput as TextInput,
+//   Checkbox,
+//   Loading,
+// } from '../../components/index';
+
+// const SignUp = ({navigation}) => {
+//   const [loading, setLoading] = useState(false);
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [agree, setAgree] = useState(false);
+
+//   const handleSignUp = () => {
+//     if (!email || !password || !agree) {
+//       showMessage({
+//         message: 'Please complete all fields and agree to the terms!',
+//         type: 'danger',
+//       });
+//       return;
+//     }
+
+//     setLoading(true);
+//     setTimeout(() => {
+//       setLoading(false);
+//       showMessage({
+//         message: 'Account created successfully!',
+//         type: 'success',
+//       });
+//       navigation.replace('Login');
+//     }, 2000);
+//   };
+
+//   return (
+//     <>
+//       <View style={styles.pageContainer}>
+//         <Header
+//           title="Let's Get Started!"
+//           subTitle="Fill the form to continue"
+//         />
+//         <Logosignup width={210} height={210} style={styles.signupPic} />
+//         <View style={styles.contentContainer}>
+//           <Gap height={2} />
+//           <TextInput
+//             text="Your Email Address"
+//             placeholder="Enter your email address"
+//             value={email}
+//             onChangeText={setEmail}
+//           />
+//           <Gap height={16} />
+//           <TextInput
+//             text="Create a Password"
+//             placeholder="Enter your password"
+//             value={password}
+//             onChangeText={setPassword}
+//           />
+//           <Gap height={10} />
+//           <Checkbox
+//             label="I agree with terms of use"
+//             value={agree}
+//             onValueChange={setAgree}
+//           />
+//           <Gap height={20} />
+//           <Button text="Sign Up" onPress={handleSignUp} />
+//           <Gap height={12} />
+//           <View style={styles.signupWrapper}>
+//             <Text style={styles.signupText}>
+//               Already have an account?{' '}
+//               <TouchableOpacity onPress={() => navigation.replace('Login')}>
+//                 <Text style={styles.signupLink}>Log In</Text>
+//               </TouchableOpacity>
+//             </Text>
+//           </View>
+//         </View>
+//       </View>
+//       {loading && <Loading />}
+//     </>
+//   );
+// };
+
+// export default SignUp;
+
+// const styles = StyleSheet.create({
+//   pageContainer: {
+//     flex: 1,
+//   },
+//   contentContainer: {
+//     flex: 1,
+//     marginTop: 24,
+//     marginHorizontal: 24,
+//   },
+//   signupPic: {
+//     alignSelf: 'center',
+//     marginTop: 2,
+//     marginBottom: 12,
+//   },
+//   signupWrapper: {
+//     alignItems: 'center',
+//     marginTop: 12,
+//   },
+//   signupText: {
+//     fontSize: 11,
+//     fontFamily: 'Poppins-Regular',
+//     color: '#808080',
+//   },
+//   signupLink: {
+//     fontFamily: 'Poppins-SemiBold',
+//     color: '#000',
+//     fontSize: 11,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+// });
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import Logosignup from '../../assets/signup_pic';
+import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 
 import {
   Header,
@@ -18,24 +139,68 @@ const SignUp = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [agree, setAgree] = useState(false);
 
-  const handleSignUp = () => {
-    if (!email || !password || !agree) {
+  const handleSignUp = async () => {
+    if (!email || !password) {
       showMessage({
-        message: 'Please complete all fields and agree to the terms!',
+        message: 'Please enter your email and password!',
+        type: 'danger',
+      });
+      return;
+    }
+
+    if (!agree) {
+      showMessage({
+        message: 'You must agree to the terms of use!',
         type: 'danger',
       });
       return;
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    const auth = getAuth();
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
       showMessage({
         message: 'Account created successfully!',
         type: 'success',
       });
-      navigation.replace('Login');
-    }, 2000);
+
+      // Navigasi ke Login setelah sign up berhasil
+      navigation.replace('Login', {
+        email: email, // Mengirim email untuk pre-fill di halaman login
+      });
+    } catch (error) {
+      let errorMessage = 'Registration failed';
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          errorMessage = 'Email already in use';
+          break;
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address';
+          break;
+        case 'auth/weak-password':
+          errorMessage = 'Password should be at least 6 characters';
+          break;
+        case 'auth/operation-not-allowed':
+          errorMessage = 'Email/password accounts are not enabled';
+          break;
+        default:
+          errorMessage = error.message;
+      }
+
+      showMessage({
+        message: errorMessage,
+        type: 'danger',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,13 +218,16 @@ const SignUp = ({navigation}) => {
             placeholder="Enter your email address"
             value={email}
             onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
           />
           <Gap height={16} />
           <TextInput
             text="Create a Password"
-            placeholder="Enter your password"
+            placeholder="Enter your password (min. 6 characters)"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry
           />
           <Gap height={10} />
           <Checkbox
