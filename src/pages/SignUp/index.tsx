@@ -145,10 +145,22 @@ const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nama, setNama] = useState('');
+  const [fakultas, setFakultas] = useState('');
+  const [jurusan, setJurusan] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [agree, setAgree] = useState(false);
 
   const handleSignUp = async () => {
-    if (!email || !password || !nama) {
+    if (
+      !email ||
+      !password ||
+      !nama ||
+      !fakultas ||
+      !jurusan ||
+      !studentId ||
+      !phoneNumber
+    ) {
       showMessage({
         message: 'Please complete all fields!',
         type: 'danger',
@@ -169,7 +181,6 @@ const SignUp = ({navigation}) => {
     const db = getDatabase();
 
     try {
-      // 1. Buat akun di Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -178,11 +189,14 @@ const SignUp = ({navigation}) => {
 
       const user = userCredential.user;
 
-      // 2. Simpan data tambahan ke Realtime Database
       await set(ref(db, 'users/' + user.uid), {
         nama: nama,
         email: email,
-        createdAt: new Date().toISOString(), // Opsional: tambahkan timestamp
+        faculty: fakultas,
+        jurusan: jurusan,
+        studentId: studentId,
+        phone: phoneNumber,
+        createdAt: new Date().toISOString(),
       });
 
       showMessage({
@@ -248,6 +262,35 @@ const SignUp = ({navigation}) => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+          />
+          <Gap height={16} />
+          <TextInput
+            text="Faculty"
+            placeholder="Enter your faculty"
+            value={fakultas}
+            onChangeText={setFakultas}
+          />
+          <Gap height={16} />
+          <TextInput
+            text="Major"
+            placeholder="Enter your major"
+            value={jurusan}
+            onChangeText={setJurusan}
+          />
+          <Gap height={16} />
+          <TextInput
+            text="Student ID"
+            placeholder="Enter your student ID"
+            value={studentId}
+            onChangeText={setStudentId}
+          />
+          <Gap height={16} />
+          <TextInput
+            text="Phone Number"
+            placeholder="Enter your phone number"
+            keyboardType="phone-pad"
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
           />
           <Gap height={10} />
           <Checkbox
