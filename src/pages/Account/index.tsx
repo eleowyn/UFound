@@ -220,9 +220,10 @@ interface UserData {
   nama?: string;
   email?: string;
   faculty?: string;
+  jurusan?: string;
   studentId?: string;
   phone?: string;
-  foto?: string; // Field baru untuk menyimpan base64
+  foto?: string;
 }
 
 const Account = ({navigation}) => {
@@ -277,13 +278,11 @@ const Account = ({navigation}) => {
     }
 
     try {
-      // Konversi ke base64
       const base64String = await convertToBase64(uri);
 
-      // Update ke Firebase
       const db = getDatabase();
       await update(ref(db, `users/${user.uid}`), {
-        foto: base64String, // Simpan sebagai string base64
+        foto: base64String,
       });
 
       showMessage({
@@ -376,7 +375,7 @@ const Account = ({navigation}) => {
         <View style={styles.profileSection}>
           <View style={styles.profileRow}>
             <TouchableOpacity onPress={onSelectImage} disabled={uploading}>
-              {userData?.foto ? ( // Menampilkan foto hanya jika ada
+              {userData?.foto ? (
                 <Image
                   source={{uri: userData.foto}}
                   style={styles.profileCircle}
@@ -405,7 +404,9 @@ const Account = ({navigation}) => {
         <View style={styles.infoBox}>
           <Text style={styles.infoLabel}>Faculty / Major</Text>
           <Text style={styles.infoValue}>
-            {userData?.faculty || 'Not specified'}
+            {(userData?.faculty || 'Not specified') +
+              ' / ' +
+              (userData?.jurusan || 'Not specified')}
           </Text>
 
           <Text style={styles.infoLabel}>Student ID</Text>
@@ -466,7 +467,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '800',
     marginBottom: 2,
-    width: 84,
+    width: 200,
     height: 29,
   },
   profileEmail: {
