@@ -83,7 +83,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
               console.log('No user data found for ID:', item.createdBy);
               setCreatorName('Unknown User');
             }
-          }, (error) => {
+          }, (error: any) => {
             console.error('Error fetching user data:', error);
             console.error('Error code:', error.code);
             console.error('Error message:', error.message);
@@ -116,6 +116,10 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
       month: 'long',
       day: 'numeric',
       year: 'numeric',
+    }) + ' at ' + date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
     });
   };
 
