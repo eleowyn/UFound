@@ -133,7 +133,7 @@ const Search = () => {
           <TextInput
             style={styles.searchInput}
             placeholder="Search Items"
-            placeholderTextColor="#666"
+            placeholderTextColor="black"
             value={searchText}
             onChangeText={setSearchText}
           />
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flexDirection: 'row',
-    backgroundColor: '#F4D7DA',
+    backgroundColor: '#FFDEDE',
     borderRadius: 25,
     paddingHorizontal: 16,
     alignItems: 'center',
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Poppins-Medium',
     flex: 1,
-    color: '#333',
+    color: 'black',
   },
   mostSearchedContainer: {
     marginHorizontal: 16,

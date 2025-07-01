@@ -9,6 +9,7 @@ import React, {useState, useEffect} from 'react';
 import {BackIcon} from '../../assets';
 import {Bigcard, BottomTabs} from '../../components';
 import {getDatabase, ref, onValue} from 'firebase/database';
+import {getAuth} from 'firebase/auth';
 import app from '../../config/Firebase';
 
 interface ItemData {
@@ -87,6 +88,15 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
           <Text style={styles.text}>Item Details</Text>
         </View>
 
+        {item?.createdBy === getAuth().currentUser?.uid && (
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => navigation.navigate('AddItems', { editItem: item })}
+          >
+            <Text style={styles.editButtonText}>Edit Post</Text>
+          </TouchableOpacity>
+        )}
+
         <Bigcard
           title={item?.itemName || 'Unknown Item'}
           createdby={creatorName}
@@ -130,6 +140,20 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 24,
     color: '#000',
+  },
+  editButton: {
+    backgroundColor: '#000',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignSelf: 'flex-end',
+    marginRight: 16,
+    marginBottom: 16,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontFamily: 'Poppins-Medium',
   },
 });
 

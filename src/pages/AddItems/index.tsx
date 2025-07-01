@@ -4,7 +4,7 @@ import {StyleSheet, Text, View, ScrollView, Alert} from 'react-native';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {getAuth} from 'firebase/auth';
-import {getDatabase, ref, push, set, onValue} from 'firebase/database';
+import {getDatabase, ref, push, set, onValue, update} from 'firebase/database';
 import app from '../../config/Firebase';
 import {
   Loading,
@@ -26,23 +26,33 @@ interface NavigationProps {
 
 interface AddItemsProps {
   navigation: NavigationProps;
+  route?: {
+    params?: {
+      editItem?: any;
+    };
+  };
 }
 
-const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
+const AddItems: React.FC<AddItemsProps> = ({navigation, route}) => {
+  const editItem = route?.params?.editItem;
+  const isEditing = !!editItem;
+
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState<string>('');
   const [selectedPostType, setSelectedPostType] = useState<'Found' | 'Lost'>(
-    'Found',
+    editItem?.postType || 'Found',
   );
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(editItem ? new Date(editItem.date) : new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
-  const [itemName, setItemName] = useState('');
-  const [location, setLocation] = useState('');
-  const [contact, setContact] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [itemName, setItemName] = useState(editItem?.itemName || '');
+  const [location, setLocation] = useState(editItem?.location || '');
+  const [contact, setContact] = useState(editItem?.contact || '');
+  const [description, setDescription] = useState(editItem?.description || '');
+  const [selectedImage, setSelectedImage] = useState<any>(
+    editItem?.imageBase64 ? { uri: editItem.imageBase64 } : null
+  );
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -181,13 +191,13 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
         return false;
       }
 
-      console.log('Saving item to Firebase...');
+      console.log(isEditing ? 'Updating item in Firebase...' : 'Saving item to Firebase...');
       const db = getDatabase(app);
-      const itemsRef = ref(db, 'items');
-      const newItemRef = push(itemsRef);
 
-      let imageBase64 = null;
-      if (selectedImage?.uri) {
+      let imageBase64 = selectedImage?.uri;
+      
+      // Only convert to base64 if it's a new image (not already base64)
+      if (selectedImage?.uri && !selectedImage.uri.startsWith('data:')) {
         console.log('Processing image...');
         try {
           imageBase64 = await convertImageToBase64(selectedImage.uri);
@@ -198,25 +208,49 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
             message: 'Image processing failed, saving item without image',
             type: 'warning',
           });
+          imageBase64 = null;
         }
       }
 
-      const itemData = {
-        id: newItemRef.key,
-        itemName,
-        location,
-        contact,
-        description,
-        postType: selectedPostType,
-        date: date.toISOString(),
-        imageBase64,
-        createdBy: user.uid,
-        createdAt: Date.now(),
-      };
+      if (isEditing && editItem) {
+        // Update existing item
+        const itemRef = ref(db, `items/${editItem.id}`);
+        const updateData = {
+          itemName,
+          location,
+          contact,
+          description,
+          postType: selectedPostType,
+          date: date.toISOString(),
+          imageBase64,
+        };
 
-      console.log('Saving item data:', itemData);
-      await set(newItemRef, itemData);
-      console.log('Item saved successfully');
+        console.log('Updating item data:', updateData);
+        await update(itemRef, updateData);
+        console.log('Item updated successfully');
+      } else {
+        // Create new item
+        const itemsRef = ref(db, 'items');
+        const newItemRef = push(itemsRef);
+
+        const itemData = {
+          id: newItemRef.key,
+          itemName,
+          location,
+          contact,
+          description,
+          postType: selectedPostType,
+          date: date.toISOString(),
+          imageBase64,
+          createdBy: user.uid,
+          createdAt: Date.now(),
+        };
+
+        console.log('Saving item data:', itemData);
+        await set(newItemRef, itemData);
+        console.log('Item saved successfully');
+      }
+      
       return true;
     } catch (error) {
       console.error('Error saving item:', error);
@@ -246,18 +280,20 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
     
     if (success) {
       showMessage({
-        message: 'Item posted successfully!',
+        message: isEditing ? 'Item updated successfully!' : 'Item posted successfully!',
         type: 'success',
       });
       
-      // Reset form
-      setItemName('');
-      setLocation('');
-      setContact('');
-      setDescription('');
-      setSelectedImage(null);
-      setDate(new Date());
-      setSelectedPostType('Found');
+      if (!isEditing) {
+        // Reset form only for new posts
+        setItemName('');
+        setLocation('');
+        setContact('');
+        setDescription('');
+        setSelectedImage(null);
+        setDate(new Date());
+        setSelectedPostType('Found');
+      }
       
       navigation.goBack();
     }
@@ -270,7 +306,7 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}>
         <Header
-          title="Add Items"
+          title={isEditing ? "Edit Item" : "Add Items"}
           subTitle="Find your items and help people find it too!"
         />
 
@@ -280,7 +316,7 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
               <Text style={styles.plusIcon}>+</Text>
             </View>
             <Text style={styles.infoText}>
-              Hey {userName || 'there'}, fill this form to add founded or lost items!
+              Hey {userName || 'there'}, fill this form to {isEditing ? 'update' : 'add'} founded or lost items!
             </Text>
           </View>
 
@@ -366,7 +402,7 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
           <Gap height={32} />
 
           <Button
-            text="Post"
+            text={isEditing ? "Update" : "Post"}
             onPress={handlePost}
             bgColor="#000000"
             textColor="#FFFFFF"
