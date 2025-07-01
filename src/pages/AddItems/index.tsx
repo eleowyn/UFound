@@ -392,7 +392,7 @@ const AddItems: React.FC<AddItemsProps> = ({navigation, route}) => {
           <FormInput
             label="Description/Item Information"
             placeholder="Describe the item, color, texture, etc..."
-            placeholderTextColor="#000"
+            placeholderTextColor="#666"
             multiline={true}
             numberOfLines={4}
             value={description}
