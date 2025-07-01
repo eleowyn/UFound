@@ -37,22 +37,42 @@ const Bigcard: React.FC<BigcardProps> = ({
             <Text style={styles.title}>{title}</Text>
             {status === 'Found' ? <Foundlabel /> : <Lostlabel />}
           </View>
-          <View style={styles.bottom}>
-            <View style={styles.bottomright}>
-              <Text style={styles.subtitle}>Created By:</Text>
-              <Text style={styles.subtitle}>Date:</Text>
-              <Text style={styles.subtitle}>Created At:</Text>
-              <Text style={styles.subtitle}>Location:</Text>
-              <Text style={styles.subtitle}>Contact:</Text>
-              <Text style={styles.subtitle}>Description:</Text>
+          
+          <View style={styles.detailsContainer}>
+            {/* Created By Box */}
+            <View style={styles.detailBox}>
+              <Text style={styles.detailLabel}>Created By</Text>
+              <Text style={styles.detailValue}>{createdby}</Text>
             </View>
-            <View>
-              <Text style={styles.subtitle}>{createdby}</Text>
-              <Text style={styles.subtitle}>{date}</Text>
-              <Text style={styles.subtitle}>{createdAt}</Text>
-              <Text style={styles.subtitle}>{location}</Text>
-              <Text style={styles.subtitle}>{contact}</Text>
-              <Text style={styles.subtitle}>{description}</Text>
+
+            {/* Date Box */}
+            <View style={styles.detailBox}>
+              <Text style={styles.detailLabel}>Date</Text>
+              <Text style={styles.detailValue}>{date}</Text>
+            </View>
+
+            {/* Created At Box */}
+            <View style={styles.detailBox}>
+              <Text style={styles.detailLabel}>Created At</Text>
+              <Text style={styles.detailValue}>{createdAt}</Text>
+            </View>
+
+            {/* Location Box */}
+            <View style={styles.detailBox}>
+              <Text style={styles.detailLabel}>Location</Text>
+              <Text style={styles.detailValue}>{location}</Text>
+            </View>
+
+            {/* Contact Box */}
+            <View style={styles.detailBox}>
+              <Text style={styles.detailLabel}>Contact</Text>
+              <Text style={styles.detailValue}>{contact}</Text>
+            </View>
+
+            {/* Description Box */}
+            <View style={[styles.detailBox, styles.descriptionBox]}>
+              <Text style={styles.detailLabel}>Description</Text>
+              <Text style={[styles.detailValue, styles.descriptionText]}>{description}</Text>
             </View>
           </View>
         </View>
@@ -69,14 +89,23 @@ const styles = StyleSheet.create({
   },
   card: {
     alignItems: 'center',
-    height: 670,
+    minHeight: 670,
     width: 355,
     borderRadius: 13,
     backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   detail: {
     width: 351,
-    marginTop: 40,
+    marginTop: 20,
+    paddingBottom: 20,
   },
   photo: {
     height: 236,
@@ -90,23 +119,53 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: 40,
-  },
-  bottom: {
-    flexDirection: 'row',
-    width: '90%',
-    alignSelf: 'center',
-  },
-  bottomright: {
-    paddingRight: 50,
+    marginBottom: 20,
   },
   title: {
     fontFamily: 'Poppins-Bold',
     fontSize: 24,
+    color: '#333',
   },
-  subtitle: {
+  detailsContainer: {
+    width: '90%',
+    alignSelf: 'center',
+  },
+  detailBox: {
+    backgroundColor: '#F8F9FA',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#E9ECEF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  descriptionBox: {
+    minHeight: 80,
+  },
+  detailLabel: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 12,
+    color: '#6C757D',
+    marginBottom: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  detailValue: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 14,
-    paddingBottom: 20,
+    color: '#333',
+    lineHeight: 20,
+  },
+  descriptionText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    lineHeight: 22,
   },
 });

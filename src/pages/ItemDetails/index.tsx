@@ -40,46 +40,74 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   useEffect(() => {
-    if (item?.createdBy) {
-      console.log('Fetching user data for createdBy:', item.createdBy);
-      const db = getDatabase(app);
-      const userRef = ref(db, 'users/' + item.createdBy);
-      
-      const unsubscribe = onValue(userRef, (snapshot) => {
-        console.log('User data snapshot received:', snapshot.exists());
-        const userData = snapshot.val();
-        console.log('User data:', userData);
+    const fetchUserData = async () => {
+      if (item?.createdBy) {
+        console.log('Fetching user data for createdBy:', item.createdBy);
+        console.log('Full item data:', item);
         
-        setIsLoadingUser(false);
-        
-        if (userData) {
-          if (userData.nama) {
-            console.log('Setting creator name to:', userData.nama);
-            setCreatorName(userData.nama);
-          } else if (userData.name) {
-            // Fallback in case the field is named 'name' instead of 'nama'
-            console.log('Setting creator name to (fallback):', userData.name);
-            setCreatorName(userData.name);
-          } else {
-            console.log('User data exists but no nama/name field found');
-            setCreatorName('User');
-          }
-        } else {
-          console.log('No user data found for ID:', item.createdBy);
+        try {
+          const db = getDatabase(app);
+          const userRef = ref(db, `users/${item.createdBy}`);
+          
+          const unsubscribe = onValue(userRef, (snapshot) => {
+            console.log('User data snapshot received:', snapshot.exists());
+            console.log('Snapshot key:', snapshot.key);
+            console.log('Snapshot ref path:', snapshot.ref.toString());
+            
+            const userData = snapshot.val();
+            console.log('Raw user data:', userData);
+            console.log('User data type:', typeof userData);
+            
+            setIsLoadingUser(false);
+            
+            if (snapshot.exists() && userData) {
+              // Check all possible name fields
+              const possibleNameFields = ['nama', 'name', 'fullName', 'displayName', 'firstName'];
+              let foundName = null;
+              
+              for (const field of possibleNameFields) {
+                if (userData[field]) {
+                  foundName = userData[field];
+                  console.log(`Found name in field '${field}':`, foundName);
+                  break;
+                }
+              }
+              
+              if (foundName) {
+                setCreatorName(foundName);
+              } else {
+                console.log('No name field found in user data. Available fields:', Object.keys(userData));
+                setCreatorName('User');
+              }
+            } else {
+              console.log('No user data found for ID:', item.createdBy);
+              setCreatorName('Unknown User');
+            }
+          }, (error) => {
+            console.error('Error fetching user data:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            setIsLoadingUser(false);
+            setCreatorName('Unknown User');
+          });
+
+          return () => {
+            console.log('Cleaning up user data listener');
+            unsubscribe();
+          };
+        } catch (error) {
+          console.error('Error setting up user data listener:', error);
+          setIsLoadingUser(false);
           setCreatorName('Unknown User');
         }
-      }, (error) => {
-        console.error('Error fetching user data:', error);
+      } else {
+        console.log('No createdBy field found in item:', item);
         setIsLoadingUser(false);
         setCreatorName('Unknown User');
-      });
+      }
+    };
 
-      return () => unsubscribe();
-    } else {
-      console.log('No createdBy field found in item:', item);
-      setIsLoadingUser(false);
-      setCreatorName('Unknown User');
-    }
+    fetchUserData();
   }, [item]);
 
   const formatDate = (dateString: string) => {

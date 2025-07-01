@@ -41,7 +41,13 @@ interface UserData {
   foto?: string;
 }
 
-const Account = ({navigation}) => {
+interface NavigationProps {
+  replace: (screen: string) => void;
+  goBack: () => void;
+  navigate: (screen: string) => void;
+}
+
+const Account = ({navigation}: {navigation: NavigationProps}) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -69,21 +75,38 @@ const Account = ({navigation}) => {
     }
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      const auth = getAuth();
-      await signOut(auth);
-      navigation.replace('Login');
-      showMessage({
-        message: 'You have been logged out successfully',
-        type: 'success',
-      });
-    } catch (error) {
-      showMessage({
-        message: 'Logout failed: ' + error.message,
-        type: 'danger',
-      });
-    }
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const auth = getAuth();
+              await signOut(auth);
+              navigation.replace('Login');
+              showMessage({
+                message: 'You have been logged out successfully',
+                type: 'success',
+              });
+            } catch (error: any) {
+              showMessage({
+                message: 'Logout failed: ' + (error.message || 'Unknown error'),
+                type: 'danger',
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
   };
 
   const deleteUserPosts = async (userId: string) => {
@@ -92,7 +115,7 @@ const Account = ({navigation}) => {
       // Get all posts and filter manually to avoid indexing issues
       const snapshot = await get(ref(db, 'posts'));
       if (snapshot.exists()) {
-        const updates = {};
+        const updates: any = {};
         snapshot.forEach(childSnapshot => {
           const postData = childSnapshot.val();
           if (postData && postData.userId === userId) {
@@ -119,7 +142,7 @@ const Account = ({navigation}) => {
       // Delete comments from posts
       const postsSnapshot = await get(ref(db, 'posts'));
       if (postsSnapshot.exists()) {
-        const updates = {};
+        const updates: any = {};
         postsSnapshot.forEach(postSnapshot => {
           const postData = postSnapshot.val();
           if (postData.comments) {
@@ -150,7 +173,7 @@ const Account = ({navigation}) => {
       // Delete likes from posts
       const postsSnapshot = await get(ref(db, 'posts'));
       if (postsSnapshot.exists()) {
-        const updates = {};
+        const updates: any = {};
         postsSnapshot.forEach(postSnapshot => {
           const postData = postSnapshot.val();
           if (postData.likes && postData.likes[userId]) {
@@ -172,7 +195,7 @@ const Account = ({navigation}) => {
   const confirmDeleteAccount = () => {
     Alert.alert(
       'Delete Account',
-      'This action cannot be undone. All your data including posts, comments, and likes will be permanently deleted. Are you sure you want to continue?',
+      'This action cannot be undone, all your data including posts will be permanently deleted. Are you sure you want to continue?',
       [
         {
           text: 'Cancel',
@@ -249,7 +272,7 @@ const Account = ({navigation}) => {
       });
 
       navigation.replace('Login');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Account deletion error:', error);
 
       let errorMessage = 'Failed to delete account';
@@ -270,7 +293,7 @@ const Account = ({navigation}) => {
             'Network error. Please check your connection and try again.';
           break;
         default:
-          errorMessage = `Error: ${error.message}`;
+          errorMessage = `Error: ${error.message || 'Unknown error'}`;
       }
 
       showMessage({
@@ -320,10 +343,10 @@ const Account = ({navigation}) => {
         message: 'Profile picture updated successfully!',
         type: 'success',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Upload error:', error);
       showMessage({
-        message: 'Failed to upload photo',
+        message: 'Failed to upload photo: ' + (error.message || 'Unknown error'),
         type: 'danger',
       });
     } finally {
@@ -438,22 +461,28 @@ const Account = ({navigation}) => {
         </View>
 
         <View style={styles.infoBox}>
-          <Text style={styles.infoLabel}>Faculty / Major</Text>
-          <Text style={styles.infoValue}>
-            {(userData?.faculty || 'Not specified') +
-              ' / ' +
-              (userData?.jurusan || 'Not specified')}
-          </Text>
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Faculty / Major</Text>
+            <Text style={styles.infoValue}>
+              {(userData?.faculty || 'Not specified') +
+                ' / ' +
+                (userData?.jurusan || 'Not specified')}
+            </Text>
+          </View>
 
-          <Text style={styles.infoLabel}>Student ID</Text>
-          <Text style={styles.infoValue}>
-            {userData?.studentId || 'Not specified'}
-          </Text>
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Student ID</Text>
+            <Text style={styles.infoValue}>
+              {userData?.studentId || 'Not specified'}
+            </Text>
+          </View>
 
-          <Text style={styles.infoLabel}>Phone Number</Text>
-          <Text style={styles.infoValue}>
-            {userData?.phone || 'Not specified'}
-          </Text>
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Phone Number</Text>
+            <Text style={styles.infoValue}>
+              {userData?.phone || 'Not specified'}
+            </Text>
+          </View>
         </View>
 
         {/* Action Buttons */}
@@ -461,18 +490,15 @@ const Account = ({navigation}) => {
           <Button
             text="Logout"
             onPress={handleLogout}
-            color="#8D92A3"
-            buttonColor="#FFFFFF"
-            style={styles.actionButton}
+            textColor="#FFFFFF"
+            bgColor="#000000"
           />
           <Gap height={16} />
           <Button
             text={deleting ? 'Deleting Account...' : 'Delete Account'}
             onPress={confirmDeleteAccount}
-            color="#FFFFFF"
+            textColor="#FFFFFF"
             bgColor="#FF3B30"
-            disabled={deleting}
-            style={styles.actionButton}
           />
         </View>
       </ScrollView>
@@ -554,10 +580,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '400',
+    fontFamily: 'Poppins-Medium',
     marginBottom: 24,
-    width: 101,
-    height: 36,
+    color: '#333',
   },
   profileSection: {
     marginBottom: 32,
@@ -589,42 +614,54 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 24,
-    fontWeight: '800',
+    fontFamily: 'Poppins-Bold',
     marginBottom: 2,
-    width: 200,
-    height: 29,
+    color: '#333',
   },
   profileEmail: {
     fontSize: 12,
-    color: '#444',
+    fontFamily: 'Poppins-Regular',
+    color: '#666',
   },
   changeText: {
     fontSize: 10,
+    fontFamily: 'Poppins-Regular',
     color: '#666',
     marginTop: 8,
     marginLeft: 22,
-    width: 42,
-    height: 15,
   },
   infoBox: {
-    borderWidth: 1,
-    borderColor: '#D3D3D3',
+    marginBottom: 24,
+  },
+  infoItem: {
+    backgroundColor: '#F8F9FA',
     borderRadius: 12,
     padding: 16,
-    backgroundColor: '#FAFAFA',
-    marginBottom: 24,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#E9ECEF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   infoLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    marginTop: 12,
-    marginBottom: 4,
+    fontFamily: 'Poppins-Medium',
+    color: '#6C757D',
+    marginBottom: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   infoValue: {
-    fontSize: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
-    paddingBottom: 4,
+    fontSize: 14,
+    fontFamily: 'Poppins-SemiBold',
+    color: '#333',
+    lineHeight: 20,
   },
   loadingContainer: {
     flex: 1,
@@ -645,10 +682,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginTop: 40,
   },
-  actionButton: {
-    borderWidth: 1,
-    borderColor: '#D3D3D3',
-  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -665,13 +698,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
     marginBottom: 12,
     textAlign: 'center',
     color: '#FF3B30',
   },
   modalMessage: {
     fontSize: 14,
+    fontFamily: 'Poppins-Regular',
     color: '#666',
     marginBottom: 20,
     textAlign: 'center',
@@ -684,6 +718,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 12,
     fontSize: 16,
+    fontFamily: 'Poppins-Regular',
     marginBottom: 20,
   },
   modalButtons: {
@@ -709,13 +744,13 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     fontSize: 16,
+    fontFamily: 'Poppins-Medium',
     color: '#666',
-    fontWeight: '500',
   },
   deleteButtonText: {
     fontSize: 16,
+    fontFamily: 'Poppins-Medium',
     color: '#FFFFFF',
-    fontWeight: '500',
   },
 });
 //l
