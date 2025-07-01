@@ -124,6 +124,8 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Modal,
+  Pressable,
 } from 'react-native';
 import React, {useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
@@ -150,6 +152,7 @@ const SignUp = ({navigation}) => {
   const [studentId, setStudentId] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [agree, setAgree] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   const handleSignUp = async () => {
     if (
@@ -293,11 +296,20 @@ const SignUp = ({navigation}) => {
             onChangeText={setPhoneNumber}
           />
           <Gap height={10} />
-          <Checkbox
-            label="I agree with terms of use"
-            value={agree}
-            onValueChange={setAgree}
-          />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Checkbox label="" value={agree} onValueChange={setAgree} />
+            <Text style={{fontSize: 14, color: '#000'}}> I agree with </Text>
+            <TouchableOpacity onPress={() => setShowTerms(true)}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: '#1C272F',
+                  textDecorationLine: 'underline',
+                }}>
+                terms of use
+              </Text>
+            </TouchableOpacity>
+          </View>
           <Gap height={20} />
           <Button text="Sign Up" onPress={handleSignUp} />
           <Gap height={12} />
@@ -310,6 +322,61 @@ const SignUp = ({navigation}) => {
         </View>
       </ScrollView>
       {loading && <Loading />}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showTerms}
+        onRequestClose={() => setShowTerms(false)}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContent}>
+            <ScrollView>
+              <Text style={styles.modalTitle}>Terms & Conditions</Text>
+
+              <Text style={styles.modalText}>
+                1. Introduction{'\n'}
+                By using the U-Found app, you agree to comply with these terms
+                and conditions.
+              </Text>
+              <Text style={styles.modalText}>
+                2. User Responsibility{'\n'}
+                Users must provide accurate and truthful information when
+                reporting or claiming lost items.
+              </Text>
+              <Text style={styles.modalText}>
+                3. Item Verification{'\n'}
+                U-Found is not responsible for verifying ownership of items.
+                Verification must be handled by the involved users.
+              </Text>
+              <Text style={styles.modalText}>
+                4. Privacy{'\n'}
+                Your data will only be used for reporting lost and found items
+                on campus.
+              </Text>
+              <Text style={styles.modalText}>
+                5. Prohibited Use{'\n'}
+                Posting false or misleading information is strictly prohibited.
+              </Text>
+              <Text style={styles.modalText}>
+                6. Changes to Terms{'\n'}
+                We may update the terms at any time. Important changes will be
+                notified to users.
+              </Text>
+              <Text style={styles.modalText}>
+                7. Contact{'\n'}
+                For questions or concerns, please contact campus IT support or
+                the app admin.
+              </Text>
+
+              <Pressable
+                style={styles.closeButton}
+                onPress={() => setShowTerms(false)}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </Pressable>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
@@ -349,5 +416,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 4,
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 14,
+    marginBottom: 10,
+    lineHeight: 20,
+    color: '#444',
+  },
+  closeButton: {
+    marginTop: 20,
+    alignSelf: 'center',
+    backgroundColor: '#1C272F',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
