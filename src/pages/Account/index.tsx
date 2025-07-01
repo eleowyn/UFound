@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
   TextInput,
   Modal,
-  Pressable,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
@@ -49,7 +48,6 @@ const Account = ({navigation}) => {
   const [deleting, setDeleting] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
-  const [showTerms, setShowTerms] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -213,23 +211,29 @@ const Account = ({navigation}) => {
     try {
       console.log('Starting account deletion process...');
 
+      // Step 1: Reauthenticate user
       const credential = EmailAuthProvider.credential(user.email, password);
       await reauthenticateWithCredential(user, credential);
       console.log('User reauthenticated successfully');
 
+      // Step 2: Delete user's posts
       console.log('Deleting user posts...');
       await deleteUserPosts(user.uid);
 
+      // Step 3: Delete user's comments
       console.log('Deleting user comments...');
       await deleteUserComments(user.uid);
 
+      // Step 4: Delete user's likes
       console.log('Deleting user likes...');
       await deleteUserLikes(user.uid);
 
+      // Step 5: Delete user data from Realtime Database
       console.log('Deleting user data from database...');
       const db = getDatabase();
       await remove(ref(db, `users/${user.uid}`));
 
+      // Step 6: Delete user from Authentication
       console.log('Deleting user from authentication...');
       await deleteUser(user);
 
@@ -452,72 +456,7 @@ const Account = ({navigation}) => {
           </Text>
         </View>
 
-        <TouchableOpacity onPress={() => setShowTerms(true)}>
-          <Text style={styles.termsLink}>Terms of use</Text>
-        </TouchableOpacity>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={showTerms}
-          onRequestClose={() => setShowTerms(false)}>
-          <View style={styles.modalBackground}>
-            <View style={styles.modalContent}>
-              <ScrollView>
-                <Text style={styles.TermsTitle}>Terms & Conditions</Text>
-
-                <Text style={styles.modalText}>
-                  1. Introduction{'\n'}
-                  By using the U-Found app, you agree to comply with these terms
-                  and conditions.
-                </Text>
-
-                <Text style={styles.modalText}>
-                  2. User Responsibility{'\n'}
-                  Users must provide accurate and truthful information when
-                  reporting or claiming lost items.
-                </Text>
-
-                <Text style={styles.modalText}>
-                  3. Item Verification{'\n'}
-                  U-Found is not responsible for verifying ownership of items.
-                  Verification must be handled by the involved users.
-                </Text>
-
-                <Text style={styles.modalText}>
-                  4. Privacy{'\n'}
-                  Your data will only be used for reporting lost and found items
-                  on campus.
-                </Text>
-
-                <Text style={styles.modalText}>
-                  5. Prohibited Use{'\n'}
-                  Posting false or misleading information is strictly
-                  prohibited.
-                </Text>
-
-                <Text style={styles.modalText}>
-                  6. Changes to Terms{'\n'}
-                  We may update the terms at any time. Important changes will be
-                  notified to users.
-                </Text>
-
-                <Text style={styles.modalText}>
-                  7. Contact{'\n'}
-                  For questions or concerns, please contact campus IT support or
-                  the app admin.
-                </Text>
-
-                <Pressable
-                  style={styles.closeButton}
-                  onPress={() => setShowTerms(false)}>
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </Pressable>
-              </ScrollView>
-            </View>
-          </View>
-        </Modal>
-
+        {/* Action Buttons */}
         <View style={styles.actionsContainer}>
           <Button
             text="Logout"
@@ -531,7 +470,7 @@ const Account = ({navigation}) => {
             text={deleting ? 'Deleting Account...' : 'Delete Account'}
             onPress={confirmDeleteAccount}
             color="#FFFFFF"
-            buttonColor="#FF3B30"
+            bgColor="#FF3B30"
             disabled={deleting}
             style={styles.actionButton}
           />
@@ -704,6 +643,7 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     marginBottom: 40,
+    marginTop: 40,
   },
   actionButton: {
     borderWidth: 1,
@@ -765,7 +705,7 @@ const styles = StyleSheet.create({
     borderColor: '#D3D3D3',
   },
   deleteButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: '#FF6B6B',
   },
   cancelButtonText: {
     fontSize: 16,
@@ -777,51 +717,8 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '500',
   },
-  termsLink: {
-    fontSize: 12,
-    color: '#1C272F',
-    textDecorationLine: 'underline',
-    textAlign: 'left',
-    marginBottom: 10,
-  },
-  modalBackground: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  termsContent: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    maxHeight: '80%',
-  },
-  modalText: {
-    fontSize: 14,
-    marginBottom: 10,
-    lineHeight: 20,
-    color: '#444',
-  },
-  TermsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  closeButton: {
-    marginTop: 20,
-    alignSelf: 'center',
-    backgroundColor: '#1C272F',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
 });
-
+//l
 export default Account;
 // import React, {useState, useEffect} from 'react';
 // import {
