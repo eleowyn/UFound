@@ -38,9 +38,7 @@ const Login = ({navigation}) => {
       await signInWithEmailAndPassword(auth, email, password);
 
       showMessage({
-        message: rememberMe
-          ? 'Login successful! (Remembered ✅)'
-          : 'Login successful!',
+        message: rememberMe ? 'Login successful!' : 'Login successful!',
         type: 'success',
       });
 
