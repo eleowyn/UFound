@@ -5,9 +5,11 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {BackIcon} from '../../assets';
 import {Bigcard, BottomTabs} from '../../components';
+import {getDatabase, ref, onValue} from 'firebase/database';
+import app from '../../config/Firebase';
 
 interface ItemData {
   id: string;
@@ -33,6 +35,23 @@ interface ItemDetailsProps {
 
 const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
   const item = route?.params?.item;
+  const [creatorName, setCreatorName] = useState('Unknown User');
+
+  useEffect(() => {
+    if (item?.createdBy) {
+      const db = getDatabase(app);
+      const userRef = ref(db, 'users/' + item.createdBy);
+      
+      const unsubscribe = onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        if (userData && userData.nama) {
+          setCreatorName(userData.nama);
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [item?.createdBy]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -40,6 +59,19 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
       month: 'long',
       day: 'numeric',
       year: 'numeric',
+    });
+  };
+
+  const formatCreatedAt = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }) + ' at ' + date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
     });
   };
 
@@ -57,8 +89,9 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
 
         <Bigcard
           title={item?.itemName || 'Unknown Item'}
-          createdby={item?.contact || 'Unknown'}
+          createdby={creatorName}
           date={item ? formatDate(item.date) : 'Unknown Date'}
+          createdAt={item?.createdAt ? formatCreatedAt(item.createdAt) : 'Unknown'}
           location={item?.location || 'Unknown Location'}
           contact={item?.contact || 'No contact info'}
           description={item?.description || 'No description available'}

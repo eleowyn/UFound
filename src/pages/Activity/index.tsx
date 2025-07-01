@@ -181,16 +181,15 @@ const Activity: React.FC<ActivityProps> = ({navigation}) => {
                 <Text style={styles.cardsSectionTitle}>Your Items</Text>
                 <View style={styles.cardsGrid}>
                   {userPosts.map(item => (
-                    <View key={`card-${item.id}`} style={styles.cardContainer}>
-                      <Card 
-                        title={item.itemName} 
-                        location={item.location} 
-                        status={item.postType}
-                        date={formatDate(item.date)}
-                        image={item.imageBase64}
-                        onPress={() => navigation.navigate('ItemDetails', { item })}
-                      />
-                    </View>
+                    <Card 
+                      key={`card-${item.id}`}
+                      title={item.itemName} 
+                      location={item.location} 
+                      status={item.postType}
+                      date={formatDate(item.date)}
+                      image={item.imageBase64}
+                      onPress={() => navigation.navigate('ItemDetails', { item })}
+                    />
                   ))}
                 </View>
               </View>
@@ -272,12 +271,12 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   cardLocation: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#000',
     fontWeight: '800',
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '800',
     marginBottom: 8,
     color: '#504D4D',
@@ -351,10 +350,15 @@ const styles = StyleSheet.create({
   },
   cardsSection: {
     marginTop: 24,
+    padding: 16,
+    borderRadius: 13,
+    backgroundColor: '#FFFF',
+    borderWidth: 1,
+    borderColor: '#D3D3D3',
   },
   cardsSectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'Poppins-Medium',
     marginBottom: 16,
     color: '#333',
   },
@@ -362,9 +366,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 16,
-  },
-  cardContainer: {
-    width: '48%',
+    rowGap: 16,
   },
 });

@@ -6,6 +6,7 @@ interface BigcardProps {
   title?: string;
   createdby?: string;
   date?: string;
+  createdAt?: string;
   location?: string;
   contact?: string;
   description?: string;
@@ -17,6 +18,7 @@ const Bigcard: React.FC<BigcardProps> = ({
   title = 'Lost Item',
   createdby = 'Created By',
   date = 'Date',
+  createdAt = 'Unknown',
   location = 'Location',
   contact = 'Contact',
   description = 'Description',
@@ -39,6 +41,7 @@ const Bigcard: React.FC<BigcardProps> = ({
             <View style={styles.bottomright}>
               <Text style={styles.subtitle}>Created By:</Text>
               <Text style={styles.subtitle}>Date:</Text>
+              <Text style={styles.subtitle}>Created At:</Text>
               <Text style={styles.subtitle}>Location:</Text>
               <Text style={styles.subtitle}>Contact:</Text>
               <Text style={styles.subtitle}>Description:</Text>
@@ -46,6 +49,7 @@ const Bigcard: React.FC<BigcardProps> = ({
             <View>
               <Text style={styles.subtitle}>{createdby}</Text>
               <Text style={styles.subtitle}>{date}</Text>
+              <Text style={styles.subtitle}>{createdAt}</Text>
               <Text style={styles.subtitle}>{location}</Text>
               <Text style={styles.subtitle}>{contact}</Text>
               <Text style={styles.subtitle}>{description}</Text>
