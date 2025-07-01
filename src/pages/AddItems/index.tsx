@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, ScrollView, Alert} from 'react-native';
 
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {getAuth} from 'firebase/auth';
-import {getDatabase, ref, push, set} from 'firebase/database';
+import {getDatabase, ref, push, set, onValue} from 'firebase/database';
 import app from '../../config/Firebase';
 import {
   Loading,
@@ -30,6 +30,7 @@ interface AddItemsProps {
 
 const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState<string>('');
   const [selectedPostType, setSelectedPostType] = useState<'Found' | 'Lost'>(
     'Found',
   );
@@ -42,6 +43,23 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
   const [contact, setContact] = useState('');
   const [description, setDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState<any>(null);
+
+  useEffect(() => {
+    const auth = getAuth(app);
+    const user = auth.currentUser;
+    
+    if (user) {
+      const db = getDatabase(app);
+      const userRef = ref(db, 'users/' + user.uid);
+      
+      onValue(userRef, (snapshot: any) => {
+        const data = snapshot.val();
+        if (data && data.nama) {
+          setUserName(data.nama);
+        }
+      });
+    }
+  }, []);
 
   const onDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
@@ -262,7 +280,7 @@ const AddItems: React.FC<AddItemsProps> = ({navigation}) => {
               <Text style={styles.plusIcon}>+</Text>
             </View>
             <Text style={styles.infoText}>
-              Hey elshara, fill this form to add founded or lost items!
+              Hey {userName || 'there'}, fill this form to add founded or lost items!
             </Text>
           </View>
 

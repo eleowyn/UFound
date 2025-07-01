@@ -156,59 +156,59 @@ const Activity: React.FC<ActivityProps> = ({navigation}) => {
           </View>
         ) : userPosts.length > 0 ? (
           <>
-            {userPosts.map(item => (
-              <View key={item.id} style={styles.activityCard}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardDate}>{formatDateTime(item.date)}</Text>
-                  <Text style={styles.cardLocation}>{item.location}</Text>
-                </View>
-                <Text style={styles.cardTitle}>{item.itemName}</Text>
-                <Text style={styles.cardType}>Status: {item.postType}</Text>
-
-                <View style={styles.checkboxContainer}>
-                  <Checkbox 
-                    checked={completedItems[item.id] || false}
-                    onValueChange={() => toggleItemCompletion(item.id)}
-                  />
-                  <Text style={styles.checkboxLabel}>
-                    Mark as done ({item.postType === 'Found' ? 'Claimed' : 'Found'})
-                  </Text>
-                </View>
-              </View>
-            ))}
-            
-            <View style={styles.cardsSection}>
-              <Text style={styles.cardsSectionTitle}>Your Items</Text>
-              <View style={styles.cardsGrid}>
-                {userPosts.map(item => (
-                  <View key={`card-${item.id}`} style={styles.cardContainer}>
-                    <Card 
-                      title={item.itemName} 
-                      location={item.location} 
-                      status={item.postType}
-                      date={formatDate(item.date)}
-                      image={item.imageBase64}
-                      onPress={() => navigation.navigate('ItemDetails', { item })}
-                    />
+              {userPosts.map(item => (
+                <View key={item.id} style={styles.activityCard}>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardDate}>{formatDateTime(item.date)}</Text>
+                    <Text style={styles.cardLocation}>{item.location}</Text>
                   </View>
-                ))}
+                  <Text style={styles.cardTitle}>{item.itemName}</Text>
+                  <Text style={styles.cardType}>Status: {item.postType}</Text>
+
+                  <View style={styles.checkboxContainer}>
+                    <Checkbox 
+                      checked={completedItems[item.id] || false}
+                      onValueChange={() => toggleItemCompletion(item.id)}
+                    />
+                    <Text style={styles.checkboxLabel}>
+                      Mark as done ({item.postType === 'Found' ? 'Claimed' : 'Found'})
+                    </Text>
+                  </View>
+                </View>
+              ))}
+              
+              <View style={styles.cardsSection}>
+                <Text style={styles.cardsSectionTitle}>Your Items</Text>
+                <View style={styles.cardsGrid}>
+                  {userPosts.map(item => (
+                    <View key={`card-${item.id}`} style={styles.cardContainer}>
+                      <Card 
+                        title={item.itemName} 
+                        location={item.location} 
+                        status={item.postType}
+                        date={formatDate(item.date)}
+                        image={item.imageBase64}
+                        onPress={() => navigation.navigate('ItemDetails', { item })}
+                      />
+                    </View>
+                  ))}
+                </View>
               </View>
-            </View>
           </>
-        ) : (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No posts yet</Text>
-            <Text style={styles.emptySubText}>
-              Items you post will appear here for tracking
-            </Text>
-            <TouchableOpacity 
-              style={styles.addButton}
-              onPress={() => navigation.navigate('AddItems')}
-            >
-              <Text style={styles.addButtonText}>Add Your First Item</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No posts yet</Text>
+              <Text style={styles.emptySubText}>
+                Items you post will appear here for tracking
+              </Text>
+              <TouchableOpacity 
+                style={styles.addButton}
+                onPress={() => navigation.navigate('AddItems')}
+              >
+                <Text style={styles.addButtonText}>Add Your First Item</Text>
+              </TouchableOpacity>
+            </View>
+          )}
       </ScrollView>
 
       <BottomTabs navigation={navigation} activeIndex={0} />
@@ -230,19 +230,22 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   backIcon: {
-    marginBottom: 16,
+    marginBottom: 24,
   },
   titleContainer: {
     marginBottom: 24,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 4,
+    fontSize: 24,
+    fontFamily: 'Poppins-Medium',
+    color: '#000',
+    marginBottom: 0,
   },
   subtitle: {
     fontSize: 11,
-    color: '#888',
+    fontFamily: 'Poppins-Medium',
+    color: '#808080',
+    marginTop: -4,
   },
   recentTitle: {
     fontSize: 10,
