@@ -36,23 +36,51 @@ interface ItemDetailsProps {
 
 const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
   const item = route?.params?.item;
-  const [creatorName, setCreatorName] = useState('Unknown User');
+  const [creatorName, setCreatorName] = useState('Loading...');
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   useEffect(() => {
     if (item?.createdBy) {
+      console.log('Fetching user data for createdBy:', item.createdBy);
       const db = getDatabase(app);
       const userRef = ref(db, 'users/' + item.createdBy);
       
       const unsubscribe = onValue(userRef, (snapshot) => {
+        console.log('User data snapshot received:', snapshot.exists());
         const userData = snapshot.val();
-        if (userData && userData.nama) {
-          setCreatorName(userData.nama);
+        console.log('User data:', userData);
+        
+        setIsLoadingUser(false);
+        
+        if (userData) {
+          if (userData.nama) {
+            console.log('Setting creator name to:', userData.nama);
+            setCreatorName(userData.nama);
+          } else if (userData.name) {
+            // Fallback in case the field is named 'name' instead of 'nama'
+            console.log('Setting creator name to (fallback):', userData.name);
+            setCreatorName(userData.name);
+          } else {
+            console.log('User data exists but no nama/name field found');
+            setCreatorName('User');
+          }
+        } else {
+          console.log('No user data found for ID:', item.createdBy);
+          setCreatorName('Unknown User');
         }
+      }, (error) => {
+        console.error('Error fetching user data:', error);
+        setIsLoadingUser(false);
+        setCreatorName('Unknown User');
       });
 
       return () => unsubscribe();
+    } else {
+      console.log('No createdBy field found in item:', item);
+      setIsLoadingUser(false);
+      setCreatorName('Unknown User');
     }
-  }, [item?.createdBy]);
+  }, [item]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -99,7 +127,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({navigation, route}) => {
 
         <Bigcard
           title={item?.itemName || 'Unknown Item'}
-          createdby={creatorName}
+          createdby={isLoadingUser ? 'Loading...' : creatorName}
           date={item ? formatDate(item.date) : 'Unknown Date'}
           createdAt={item?.createdAt ? formatCreatedAt(item.createdAt) : 'Unknown'}
           location={item?.location || 'Unknown Location'}
@@ -156,54 +184,3 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
   },
 });
-
-// import {
-//   StyleSheet,
-//   Text,
-//   TouchableOpacity,
-//   View,
-//   ScrollView,
-// } from 'react-native';
-// import React from 'react';
-// import {BackIcon} from '../../assets';
-// import {Bigcard, BottomTabs} from '../../components/index';
-
-// const ItemDetails = ({navigation}) => {
-//   return (
-//     <View style={styles.page}>
-//       <ScrollView>
-//         <View style={styles.header}>
-//           <View>
-//             <TouchableOpacity onPress={() => navigation.goBack()}>
-//               <BackIcon style={styles.button} />
-//             </TouchableOpacity>
-//           </View>
-//           <Text style={styles.text}>Items Details</Text>
-//         </View>
-//         <Bigcard />
-//       </ScrollView>
-
-//       <BottomTabs navigation={navigation} activeIndex={0} />
-//     </View>
-//   );
-// };
-
-// export default ItemDetails;
-
-// const styles = StyleSheet.create({
-//   page: {
-//     paddingBottom: 100,
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   button: {
-//     margin: 30,
-//   },
-//   text: {
-//     marginLeft: 50,
-//     fontFamily: 'Poppins-Medium',
-//     fontSize: 24,
-//   },
-// });
