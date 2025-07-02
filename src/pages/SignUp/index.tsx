@@ -451,6 +451,6 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-Medium',
   },
 });

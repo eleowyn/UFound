@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   descriptionText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins-Bold',
     fontSize: 14,
     lineHeight: 22,
   },

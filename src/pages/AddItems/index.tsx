@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
   },
   plusIcon: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   infoText: {

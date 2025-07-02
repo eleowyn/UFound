@@ -374,12 +374,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   greeting: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    fontSize: 25,
+    fontFamily: 'Poppins-Medium',
+    marginBottom: 0,
   },
   subText: {
-    fontSize: 11,
+    fontSize: 12,
     color: '#666',
   },
   buttonRow: {
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    fontWeight: '500',
+    fontFamily: 'Poppins-Medium',
   },
   cardContainer: {
     marginTop: 32,

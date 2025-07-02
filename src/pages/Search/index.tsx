@@ -11,7 +11,7 @@ import {
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {getDatabase, ref, onValue} from 'firebase/database';
 import app from '../../config/Firebase';
-import {SearchIcon} from '../../assets/index';
+import {BrowseIcon} from '../../assets/index';
 import {BottomTabs, Card} from '../../components/index';
 
 interface ItemData {
@@ -129,7 +129,7 @@ const Search = () => {
       {/* Search Bar */}
       <View style={styles.searchBarContainer}>
         <View style={styles.searchBar}>
-          <SearchIcon width={20} height={20} style={styles.searchIcon} />
+          <BrowseIcon width={20} height={20} style={styles.BrowseIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search Items"
@@ -211,10 +211,10 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 16,
     alignItems: 'center',
-    height: 45,
+    height: 50,
   },
-  searchIcon: {
-    opacity: 0.6,
+  BrowseIcon: {
+    opacity: 1,
   },
   searchInput: {
     marginLeft: 12,

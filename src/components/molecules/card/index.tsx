@@ -47,7 +47,7 @@ const Card: React.FC<CardProps> = ({
         <View style={styles.contentContainer}>
           <Text style={[styles.title, completed && styles.completedTitle]}>{title}</Text>
           <View style={styles.locationContainer}>
-            <Location width={12} height={12} fill="#666" />
+            <Location width={16} height={16} fill="#666" />
             <Text style={[styles.locationText, completed && styles.completedLocationText]}>{location}</Text>
           </View>
           <View style={styles.dateContainer}>

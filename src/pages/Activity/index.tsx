@@ -263,34 +263,32 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 4,
   },
   cardDate: {
     fontSize: 11,
     color: '#000',
-    fontWeight: '800',
+    fontFamily: 'Poppins-Bold',
   },
   cardLocation: {
     fontSize: 12,
     color: '#000',
-    fontWeight: '800',
+    fontFamily: 'Poppins-Bold',
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    marginBottom: 8,
-    color: '#504D4D',
+    fontSize: 20,
+    fontFamily: 'Poppins-Bold',
+    color: 'black',
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 4,
-    gap: 8,
+    marginLeft: 0,
   },
   checkboxLabel: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#7E7777',
-    fontWeight: '800',
+    fontFamily: 'Poppins-Medium',
+    marginLeft: 8,
   },
   loadingContainer: {
     flex: 1,
@@ -332,7 +330,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'Poppins-Bold',
   },
   activityCard: {
     borderWidth: 1,
@@ -346,7 +344,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginBottom: 8,
-    fontWeight: '600',
+    fontFamily: 'Poppins-Medium',
   },
   cardsSection: {
     marginTop: 24,
