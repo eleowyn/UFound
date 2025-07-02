@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   TextInput,
   Modal,
+  Pressable,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
@@ -54,6 +55,7 @@ const Account = ({navigation}: {navigation: NavigationProps}) => {
   const [deleting, setDeleting] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
+  const [showTerms, setShowTerms] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -346,7 +348,8 @@ const Account = ({navigation}: {navigation: NavigationProps}) => {
     } catch (error: any) {
       console.error('Upload error:', error);
       showMessage({
-        message: 'Failed to upload photo: ' + (error.message || 'Unknown error'),
+        message:
+          'Failed to upload photo: ' + (error.message || 'Unknown error'),
         type: 'danger',
       });
     } finally {
@@ -484,6 +487,72 @@ const Account = ({navigation}: {navigation: NavigationProps}) => {
             </Text>
           </View>
         </View>
+
+        <TouchableOpacity onPress={() => setShowTerms(true)}>
+          <Text style={styles.termsLink}>Terms of use</Text>
+        </TouchableOpacity>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showTerms}
+          onRequestClose={() => setShowTerms(false)}>
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContent}>
+              <ScrollView>
+                <Text style={styles.TermsTitle}>Terms & Conditions</Text>
+
+                <Text style={styles.modalText}>
+                  1. Introduction{'\n'}
+                  By using the U-Found app, you agree to comply with these terms
+                  and conditions.
+                </Text>
+
+                <Text style={styles.modalText}>
+                  2. User Responsibility{'\n'}
+                  Users must provide accurate and truthful information when
+                  reporting or claiming lost items.
+                </Text>
+
+                <Text style={styles.modalText}>
+                  3. Item Verification{'\n'}
+                  U-Found is not responsible for verifying ownership of items.
+                  Verification must be handled by the involved users.
+                </Text>
+
+                <Text style={styles.modalText}>
+                  4. Privacy{'\n'}
+                  Your data will only be used for reporting lost and found items
+                  on campus.
+                </Text>
+
+                <Text style={styles.modalText}>
+                  5. Prohibited Use{'\n'}
+                  Posting false or misleading information is strictly
+                  prohibited.
+                </Text>
+
+                <Text style={styles.modalText}>
+                  6. Changes to Terms{'\n'}
+                  We may update the terms at any time. Important changes will be
+                  notified to users.
+                </Text>
+
+                <Text style={styles.modalText}>
+                  7. Contact{'\n'}
+                  For questions or concerns, please contact campus IT support or
+                  the app admin.
+                </Text>
+
+                <Pressable
+                  style={styles.closeButton}
+                  onPress={() => setShowTerms(false)}>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </Pressable>
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
 
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
@@ -734,6 +803,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 44,
   },
+  termsLink: {
+    fontSize: 12,
+    color: '#1C272F',
+    textDecorationLine: 'underline',
+    textAlign: 'left',
+    marginBottom: 10,
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  termsContent: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalText: {
+    fontSize: 14,
+    marginBottom: 10,
+    lineHeight: 20,
+    color: '#444',
+  },
+  TermsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
   cancelButton: {
     backgroundColor: '#F5F5F5',
     borderWidth: 1,
@@ -751,6 +851,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins-Medium',
     color: '#FFFFFF',
+  },
+  closeButton: {
+    marginTop: 20,
+    alignSelf: 'center',
+    backgroundColor: '#1C272F',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 //l
